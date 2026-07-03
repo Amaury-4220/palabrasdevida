@@ -2,28 +2,10 @@
   publish = "public"
   functions = "netlify/functions"
 
-[[headers]]
-  for = "/index.html"
-  [headers.values]
-    Cache-Control = "no-cache, no-store, must-revalidate"
-
-[[headers]]
-  for = "/sw.js"
-  [headers.values]
-    Cache-Control = "no-cache, no-store, must-revalidate"
-
-[[headers]]
-  for = "/plan-biblico.html"
-  [headers.values]
-    Cache-Control = "no-cache, no-store, must-revalidate"
-
-[[headers]]
-  for = "/biblia_completa.js"
-  [headers.values]
-    Cache-Control = "public, max-age=604800"
+[build.environment]
+  NODE_VERSION = "18"
 
 [[headers]]
   for = "/*"
   [headers.values]
-    X-Frame-Options = "SAMEORIGIN"
-    X-Content-Type-Options = "nosniff"
+    Cache-Control = "no-cache"
