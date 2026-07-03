@@ -404,87 +404,50 @@ const DB   = getFirestore(FB);
 onAuthStateChanged(AUTH, async (user) => {
   document.getElementById("pantalla-carga").style.display = "none";
 
+  // ── TRIAL SIN CUENTA ──────────────────────────────────────────
   if (!user) {
-    // Accept trial users (localStorage-only, no Firebase account)
     var trialInicio = localStorage.getItem("pf_trial_inicio");
-    if (trialInicio) {
-      var diasPasados = Math.floor((Date.now() - parseInt(trialInicio)) / 86400000);
-      if (diasPasados < 3) {
-        document.getElementById("header").style.display = "flex";
-        document.getElementById("app-content").style.display = "block";
-        var badge = document.getElementById("user-badge");
-        if (badge) badge.textContent = "Pastor · DEMO";
-        window._UID = "trial"; window._PLAN = "trial"; window._NOMBRE = "Pastor";
-        window.iniciarApp();
-        return;
-      }
+    if (trialInicio && Math.floor((Date.now() - parseInt(trialInicio)) / 86400000) < 3) {
+      entrarApp({ nombre: "Pastor", plan: "trial", estado: "activo" });
+      return;
     }
     document.getElementById("pantalla-login").style.display = "flex";
     return;
   }
 
-  // Leer datos del usuario en Firestore
+  // ── USUARIO AUTENTICADO → ACCESO DIRECTO ─────────────────────
+  // Si Firebase Auth funciona, se concede acceso.
+  // Intentamos leer Firestore pero nunca bloqueamos por sus errores.
+  var U = { nombre: user.displayName || user.email.split("@")[0], plan: "ofrenda", estado: "activo" };
   try {
-    let U = null;
-    try {
-      const snap = await getDoc(doc(DB, "usuarios", user.uid));
-      U = snap.exists() ? snap.data() : null;
-    } catch(fsErr) {
-      console.warn("Firestore blocked:", fsErr.code);
-      // Allow authenticated users even if Firestore blocks
-      U = { estado: "activo", plan: "ofrenda", nombre: user.displayName || user.email.split("@")[0] };
-    }
-    if (!U) U = { estado: "activo", plan: "ofrenda", nombre: user.email.split("@")[0] };
-    if (U.estado && U.estado !== "activo") {
-      document.getElementById("pantalla-login").style.display = "flex";
-      return;
-    }
-
-    // Verificar plan — ofrenda, iglesia, anual, admin o trial activo
-    const planOK = !U.plan || U.plan === "ofrenda" || U.plan === "iglesia" || U.plan === "anual" || U.rol === "admin" || U.plan === "trial";
-    const trialVigente = U.plan === "gratis" && U.fecha_expiracion &&
-      (U.fecha_expiracion.toDate ? U.fecha_expiracion.toDate() : new Date(U.fecha_expiracion)) > new Date();
-    // Also check localStorage trial
-    var lsTrial = localStorage.getItem("pf_trial_inicio");
-    var lsTrialOK = lsTrial && Math.floor((Date.now() - parseInt(lsTrial)) / 86400000) < 3;
-
-    if (!planOK && !trialVigente && !lsTrialOK) {
-      const msg = U.plan === "gratis"
-        ? "Tu período de prueba ha vencido. Activa un plan para continuar."
-        : "Necesitas un plan activo para acceder al Plan Bíblico.";
-      document.getElementById("upgrade-msg").textContent = msg;
-      document.getElementById("pantalla-upgrade").style.display = "flex";
-      return;
-    }
-
-    // ── ACCESO CONCEDIDO ─────────────────────────────────────────
-    window._UID   = user.uid;
-    window._EMAIL = user.email;
-    window._PLAN  = U.plan || "ofrenda";
-    window._NOMBRE = U.nombre || user.email;
-    window._DB    = DB;
-    window._DOC   = (path) => doc(DB, ...path.split("/"));
-    window._UPD   = updateDoc;
-    window._SRVTS = serverTimestamp;
-
-    // Badge usuario
-    document.getElementById("user-badge").textContent = (U.nombre || user.email).split(" ")[0] + " · " + (U.plan || "").toUpperCase();
-
-    // Mostrar app
-    document.getElementById("header").style.display = "flex";
-    document.getElementById("app-content").style.display = "block";
-
-    // Actualizar último acceso
-    await updateDoc(doc(DB, "usuarios", user.uid), { ultimo_acceso_plan: serverTimestamp() });
-
-    // Iniciar app
-    window.iniciarApp();
-
+    const snap = await getDoc(doc(DB, "usuarios", user.uid));
+    if (snap.exists()) Object.assign(U, snap.data());
+    // Actualizar último acceso en background (sin await para no bloquear)
+    updateDoc(doc(DB, "usuarios", user.uid), { ultimo_acceso_plan: serverTimestamp() }).catch(() => {});
   } catch(e) {
-    console.error("Error Firebase:", e);
-    document.getElementById("pantalla-login").style.display = "flex";
+    console.warn("[Plan Bíblico] Firestore no disponible:", e.code || e.message);
+    // Continuamos con datos mínimos — el acceso ya fue validado por Firebase Auth
   }
-});
+
+  entrarApp(U);
+})
+
+function entrarApp(U) {
+  window._UID    = (U && U.uid) || "local";
+  window._PLAN   = (U && U.plan) || "ofrenda";
+  window._NOMBRE = (U && U.nombre) || "Pastor";
+  window._DB     = DB;
+  window._DOC    = (path) => doc(DB, ...path.split("/"));
+  window._UPD    = updateDoc;
+  window._SRVTS  = serverTimestamp;
+
+  var badge = document.getElementById("user-badge");
+  if (badge) badge.textContent = window._NOMBRE.split(" ")[0] + " · " + window._PLAN.toUpperCase();
+
+  document.getElementById("header").style.display = "flex";
+  document.getElementById("app-content").style.display = "block";
+  window.iniciarApp();
+};
 
 // ── CERRAR SESIÓN ────────────────────────────────────────────────
 window.cerrarSesion = async () => {
