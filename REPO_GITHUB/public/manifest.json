@@ -1,0 +1,57 @@
+{
+  "name": "Palabra que Transforma",
+  "short_name": "PqT",
+  "description": "Genera sermones expositivos con IA cristocentrica",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0D1B55",
+  "theme_color": "#0D1B55",
+  "lang": "es",
+  "categories": [
+    "education",
+    "lifestyle"
+  ],
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Crear Predica",
+      "short_name": "Predica",
+      "description": "Genera un nuevo sermón expositivo",
+      "url": "./#sermon",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Agente Teológico",
+      "short_name": "Agente IA",
+      "description": "Chatea con el Agente Teológico IA",
+      "url": "./#agente",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}

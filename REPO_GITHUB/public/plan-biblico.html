@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Plan Bíblico · PredicaFácil</title>
+<meta name="description" content="Travesía por los 66 Libros · Consejo de 6 Expertos · predicafacil.cl"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0C0902;font-family:'Palatino Linotype','Book Antiqua',Georgia,serif;color:#EDE0C8;min-height:100vh}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.35}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── PANTALLA CARGA ── */
+#pantalla-carga{position:fixed;inset:0;background:#0C0902;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;gap:16px}
+#pantalla-carga .logo{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#7A5C0C,#C8960C);display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 0 32px rgba(200,150,12,0.25)}
+#pantalla-carga .spin{width:40px;height:40px;border-radius:50%;border:2px solid rgba(200,150,12,0.15);border-top-color:#C8960C;animation:spin 1s linear infinite}
+#pantalla-carga p{font-size:11px;color:#6B5A3A;letter-spacing:3px;text-transform:uppercase}
+
+/* ── PANTALLA SIN SESIÓN ── */
+#pantalla-login{display:none;position:fixed;inset:0;background:#0C0902;align-items:center;justify-content:center;z-index:9998}
+.login-card{width:90%;max-width:400px;background:rgba(255,255,255,0.03);border:1px solid rgba(200,150,12,0.2);border-radius:20px;padding:32px;text-align:center}
+.login-card .cross{font-size:36px;margin-bottom:12px}
+.login-card h2{font-size:22px;color:#F0C040;margin-bottom:6px;font-weight:400}
+.login-card p{font-size:12px;color:#8B7355;margin-bottom:24px;line-height:1.6}
+.btn-login{display:block;width:100%;padding:14px;border:none;border-radius:12px;background:linear-gradient(135deg,#8B6914,#C8960C);color:#0C0902;font-size:14px;font-weight:900;font-family:inherit;cursor:pointer;letter-spacing:2px;text-decoration:none;text-align:center;margin-bottom:10px}
+.btn-ghost{display:block;width:100%;padding:12px;border:1px solid rgba(255,255,255,0.08);border-radius:12px;background:transparent;color:#8B7355;font-size:12px;font-family:inherit;cursor:pointer;text-decoration:none;text-align:center}
+
+/* ── PANTALLA SIN PLAN ── */
+#pantalla-upgrade{display:none;position:fixed;inset:0;background:#0C0902;align-items:center;justify-content:center;z-index:9997}
+.upgrade-card{width:90%;max-width:420px;background:rgba(255,255,255,0.03);border:1px solid rgba(200,150,12,0.2);border-radius:20px;padding:32px;text-align:center}
+.upgrade-card h2{font-size:20px;color:#F0C040;margin-bottom:8px;font-weight:400}
+.upgrade-card p{font-size:12px;color:#8B7355;margin-bottom:20px;line-height:1.7}
+.plan-box{border:1px solid rgba(200,150,12,0.25);border-radius:12px;padding:14px;margin-bottom:10px;text-align:left;cursor:pointer;transition:all .2s}
+.plan-box:hover{background:rgba(200,150,12,0.06);border-color:rgba(200,150,12,0.45)}
+.plan-nombre{font-size:14px;font-weight:700;color:#F0C040;margin-bottom:2px}
+.plan-precio{font-size:12px;color:#C8960C}
+.plan-desc{font-size:11px;color:#8B7355;margin-top:4px}
+
+/* ── HEADER ── */
+#header{position:sticky;top:0;z-index:100;background:rgba(12,9,2,0.95);backdrop-filter:blur(8px);border-bottom:1px solid rgba(200,150,12,0.12);padding:10px 16px;display:flex;align-items:center;justify-content:space-between}
+.header-left{display:flex;align-items:center;gap:10px}
+.header-cross{font-size:18px}
+.header-title{font-size:14px;font-weight:900;background:linear-gradient(90deg,#F0C040,#C8960C);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header-sub{font-size:9px;color:#8B6914;letter-spacing:2px;text-transform:uppercase}
+.header-right{display:flex;align-items:center;gap:8px}
+.user-badge{font-size:10px;color:#8B7355;padding:4px 10px;border-radius:16px;border:1px solid rgba(255,255,255,0.07)}
+.btn-salir{font-size:10px;padding:5px 10px;border-radius:8px;border:1px solid rgba(200,150,12,0.2);background:transparent;color:#8B7355;cursor:pointer;font-family:inherit}
+
+/* ── CONTENIDO PRINCIPAL ── */
+#app-content{display:none;animation:fadeIn .4s ease-out}
+.inner{max-width:720px;margin:0 auto;padding:20px 16px}
+
+/* ── PROGRESO GLOBAL ── */
+.progreso-wrap{padding:12px 16px;border-radius:12px;background:rgba(200,150,12,0.05);border:1px solid rgba(200,150,12,0.14);margin-bottom:16px}
+.progreso-top{display:flex;justify-content:space-between;font-size:10px;color:#C8960C;margin-bottom:6px}
+.progreso-bar{height:6px;border-radius:6px;background:rgba(255,255,255,0.05);overflow:hidden}
+.progreso-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,#5DB85C,#C8960C,#9B59B6);transition:width .5s}
+
+/* ── BUSCADOR ── */
+.buscador{width:100%;padding:11px 14px;background:rgba(0,0,0,0.3);border:1px solid rgba(200,150,12,0.2);border-radius:12px;color:#EDE0C8;font-size:13px;font-family:inherit;outline:none;margin-bottom:14px}
+
+/* ── CATEGORIAS ── */
+.cat-bloque{margin-bottom:8px;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.01);transition:all .2s}
+.cat-bloque.abierta{border-color:var(--cat-bd);background:var(--cat-bg)}
+.cat-header{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;cursor:pointer;background:transparent;border:none;width:100%;text-align:left;font-family:inherit}
+.cat-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.cat-nombre{font-size:13px;font-weight:700;color:#EDE0C8}
+.cat-bloque.abierta .cat-nombre{color:var(--cat-c)}
+.cat-meta{font-size:10px;color:#8B7355}
+.cat-flecha{font-size:11px;color:#4A3D28}
+.cat-badge{font-size:9px;padding:2px 7px;border-radius:18px;background:rgba(93,184,92,0.1);border:1px solid rgba(93,184,92,0.25);color:#5DB85C}
+
+/* ── GRID LIBROS ── */
+.libros-grid{padding:10px 12px;border-top:1px solid var(--cat-bd);display:grid;grid-template-columns:repeat(auto-fill,minmax(105px,1fr));gap:7px}
+.libro-btn{padding:11px 6px;border-radius:11px;border:1px solid rgba(255,255,255,0.07);background:rgba(0,0,0,0.18);cursor:pointer;text-align:center;font-family:inherit;transition:all .2s}
+.libro-btn.done{border-color:var(--cat-bd);background:var(--cat-bg)}
+.libro-emoji{font-size:20px;margin-bottom:4px}
+.libro-nombre{font-size:11px;font-weight:700;color:#EDE0C8}
+.libro-progreso{font-size:8px;margin-top:3px;color:var(--cat-c)}
+
+/* ── MODAL UNIDADES ── */
+#modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:1000;align-items:flex-end;justify-content:center}
+#modal-overlay.show{display:flex}
+.modal{width:100%;max-width:680px;max-height:90vh;background:#130E04;border-radius:20px 20px 0 0;border-top:1px solid rgba(200,150,12,0.2);overflow-y:auto;padding:20px 18px;animation:fadeIn .25s ease-out}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.modal-titulo{font-size:18px;color:#EDE0C8;font-weight:700}
+.modal-cerrar{padding:6px 12px;border-radius:9px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:#8B7355;cursor:pointer;font-family:inherit;font-size:11px}
+.modal-sinopsis{font-size:12px;color:#8B7355;margin-bottom:16px;line-height:1.6}
+.cargando-unis{text-align:center;padding:32px 0;color:#8B7355;font-size:12px}
+.spin-sm{width:36px;height:36px;border-radius:50%;border:2px solid rgba(200,150,12,0.1);border-top-color:#C8960C;animation:spin 1s linear infinite;margin:0 auto 12px}
+
+/* ── UNIDADES ── */
+.uni-item{display:flex;align-items:flex-start;gap:11px;padding:13px 14px;border-radius:12px;border:1px solid rgba(255,255,255,0.07);background:rgba(255,255,255,0.02);margin-bottom:7px;cursor:pointer;transition:all .2s;font-family:inherit;width:100%;text-align:left}
+.uni-item:hover{border-color:rgba(200,150,12,0.3);background:rgba(200,150,12,0.04)}
+.uni-item.done{border-color:rgba(93,184,92,0.28);background:rgba(93,184,92,0.06)}
+.uni-num{width:26px;height:26px;border-radius:7px;flex-shrink:0;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;font-size:11px;color:#4A3D28;font-weight:700}
+.uni-item.done .uni-num{background:rgba(93,184,92,0.12);border-color:rgba(93,184,92,0.3);color:#5DB85C}
+.uni-info{flex:1}
+.uni-titulo{font-size:13px;font-weight:700;color:#EDE0C8;margin-bottom:3px}
+.uni-item.done .uni-titulo{color:#5DB85C}
+.uni-pasajes{font-size:10px;color:#8B7355;margin-bottom:5px}
+.uni-tema{font-size:9px;color:#4A3D28;display:flex;gap:5px;margin-bottom:2px}
+.uni-flecha{color:rgba(200,150,12,0.5);font-size:14px;flex-shrink:0;margin-top:2px}
+
+/* ── MODAL ESTUDIO ── */
+#modal-estudio{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.82);z-index:1100;align-items:flex-end;justify-content:center}
+#modal-estudio.show{display:flex}
+.estudio-sheet{width:100%;max-width:700px;max-height:95vh;background:#100C04;border-radius:20px 20px 0 0;border-top:1px solid rgba(200,150,12,0.22);overflow-y:auto;animation:fadeIn .25s ease-out}
+.estudio-header{position:sticky;top:0;background:#100C04;border-bottom:1px solid rgba(200,150,12,0.1);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;z-index:10}
+.estudio-titulo{font-size:14px;font-weight:700;color:#EDE0C8}
+.estudio-body{padding:16px}
+
+/* ── SECCIONES ESTUDIO ── */
+.sec-bloque{border:1px solid rgba(255,255,255,0.06);border-radius:10px;overflow:hidden;margin-bottom:7px}
+.sec-bloque.accion{border:2px solid rgba(200,150,12,0.45);background:rgba(200,150,12,0.05)}
+.sec-bloque.versiculo{border:1px solid rgba(93,184,92,0.32);background:rgba(93,184,92,0.05)}
+.sec-btn{width:100%;display:flex;align-items:center;justify-content:space-between;padding:11px 14px;background:transparent;border:none;cursor:pointer;text-align:left;font-family:inherit}
+.sec-label{font-size:8px;letter-spacing:3px;text-transform:uppercase;margin-bottom:3px}
+.sec-nombre{font-size:12px;font-weight:700;color:#EDE0C8}
+.sec-bloque.accion .sec-nombre{color:#F0C040}
+.sec-bloque.versiculo .sec-nombre{color:#A8D5A7}
+.sec-cuerpo{padding:4px 14px 14px;font-size:12px;line-height:1.9;color:#C4B898;white-space:pre-wrap;border-top:1px solid rgba(255,255,255,0.04)}
+
+/* ── PREGUNTAS ── */
+.pregunta-box{margin:10px 0;padding:11px 13px;border-radius:10px;background:rgba(200,150,12,0.07);border:1px solid rgba(200,150,12,0.22)}
+.pregunta-label{font-size:7px;letter-spacing:3px;text-transform:uppercase;color:#C8960C;margin-bottom:4px}
+.pregunta-txt{font-size:13px;color:#F0C040;font-style:italic;line-height:1.6}
+
+/* ── MODO CLASE ── */
+#modo-clase{display:none;position:fixed;inset:0;z-index:2000;background:#070409;flex-direction:column}
+#modo-clase.show{display:flex}
+.clase-topbar{padding:8px 14px;border-bottom:1px solid var(--cfg-bd, rgba(200,150,12,0.3));background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.clase-info-left{display:flex;align-items:center;gap:8px}
+.clase-info-right{display:flex;align-items:center;gap:8px}
+
+/* ── RELOJ GRANDE ── */
+.clase-reloj{flex-shrink:0;display:flex;align-items:center;justify-content:center;gap:16px;padding:10px 18px;transition:background .5s}
+.reloj-bloque{text-align:center}
+.reloj-label{font-size:8px;letter-spacing:3px;color:#8B7355;text-transform:uppercase;margin-bottom:3px}
+.reloj-num{font-family:monospace;font-size:40px;font-weight:900;line-height:1;transition:color .5s}
+.reloj-sep{width:1px;height:44px;background:rgba(255,255,255,0.07)}
+.reloj-seccion{font-size:26px;font-weight:900;color:var(--cfg-c,#C8960C);line-height:1}
+.reloj-pausa{width:42px;height:42px;border-radius:50%;border:2px solid;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;background:transparent}
+
+/* ── SLIDES ── */
+.clase-content{flex:1;overflow-y:auto;padding:24px 20px;max-width:760px;margin:0 auto;width:100%}
+.slide-titulo{font-size:12px;font-weight:900;letter-spacing:2px;text-transform:uppercase;margin-bottom:16px}
+.slide-cuerpo{font-size:14px;line-height:1.9;color:#D4C4A0}
+.clase-nav{padding:11px 18px;border-top:1px solid var(--cfg-bd,rgba(200,150,12,0.3));background:rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.nav-btn{padding:8px 18px;border-radius:9px;border:1px solid var(--cfg-bd,rgba(200,150,12,0.3));background:transparent;font-family:inherit;font-size:12px;cursor:pointer;transition:all .2s}
+.dots-nav{display:flex;gap:5px}
+.dot-nav{width:7px;height:7px;border-radius:50%;cursor:pointer;transition:all .2s;background:rgba(255,255,255,0.1)}
+
+/* ── ACCIONES ESTUDIO ── */
+.acciones-row{display:flex;gap:7px;margin-bottom:12px}
+.acc-btn{flex:1;padding:10px 8px;border-radius:10px;cursor:pointer;font-family:inherit;font-size:11px;font-weight:700;text-align:center;border:1px solid;transition:all .2s}
+
+/* ── COMPARTIR ── */
+.comp-panel{padding:13px;border-radius:10px;background:rgba(200,150,12,0.04);border:1px solid rgba(200,150,12,0.16);margin-bottom:12px}
+.comp-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.comp-btn{flex:1;min-width:90px;padding:9px 7px;border-radius:9px;cursor:pointer;font-family:inherit;font-size:11px;font-weight:700;border:1px solid}
+
+/* ── FOOTER ESTUDIO ── */
+.estudio-footer{display:flex;gap:7px;padding:14px 16px;border-top:1px solid rgba(255,255,255,0.05)}
+.footer-btn{flex:1;padding:10px;border-radius:10px;font-family:inherit;font-size:11px;cursor:pointer;text-align:center;border:1px solid rgba(255,255,255,0.07);background:transparent;color:#8B7355}
+
+@media(min-width:600px){
+  #modal-overlay,.estudio-sheet,#modo-clase .clase-content{padding-left:20px;padding-right:20px}
+}
+@media print{.noprint{display:none!important}}
+</style>
+</head>
+<body>
+
+<!-- ══ PANTALLA CARGA ══ -->
+<div id="pantalla-carga">
+  <div class="logo">✝</div>
+  <div class="spin"></div>
+  <p>Verificando acceso...</p>
+</div>
+
+<!-- ══ SIN SESIÓN ══ -->
+<div id="pantalla-login" style="display:none;position:fixed;inset:0;background:#0C0902;align-items:center;justify-content:center">
+  <div class="login-card">
+    <div class="cross">✝</div>
+    <h2>PredicaFácil</h2>
+    <p>El Plan Bíblico de 66 Libros requiere una cuenta activa.<br>Inicia sesión en Salomón IA para acceder.</p>
+    <a href="/" class="btn-login">Ir a Salomón IA →</a>
+    <a href="/" class="btn-ghost">← Volver al inicio</a>
+  </div>
+</div>
+
+<!-- ══ SIN PLAN VÁLIDO ══ -->
+<div id="pantalla-upgrade" style="display:none;position:fixed;inset:0;background:#0C0902;align-items:center;justify-content:center">
+  <div class="upgrade-card">
+    <div style="font-size:32px;margin-bottom:12px">📚</div>
+    <h2>Acceso al Plan Bíblico</h2>
+    <p id="upgrade-msg">El Plan Bíblico de 66 Libros está disponible en los planes de pago.</p>
+    <div class="plan-box" onclick="window.location='/'">
+      <div class="plan-nombre">Ofrenda · 1 pastor</div>
+      <div class="plan-precio">$5.990 / mes · USD 7.99</div>
+      <div class="plan-desc">Acceso completo a todos los 66 libros, 4 renglones y Consejo de 6 Expertos</div>
+    </div>
+    <div class="plan-box" onclick="window.location='/'">
+      <div class="plan-nombre">Ofrenda Iglesia · hasta 10 pastores</div>
+      <div class="plan-precio">$9.990 / mes · USD 12.99</div>
+      <div class="plan-desc">Todo lo anterior para un equipo de liderazgo completo</div>
+    </div>
+    <a href="/" class="btn-ghost" style="margin-top:8px">← Volver a Salomón IA</a>
+  </div>
+</div>
+
+<!-- ══ HEADER ══ -->
+<div id="header" style="display:none">
+  <div class="header-left">
+    <span class="header-cross">✝</span>
+    <div>
+      <div class="header-title">PredicaFácil</div>
+      <div class="header-sub">Plan Bíblico · 66 Libros</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <span class="user-badge" id="user-badge">...</span>
+    <button class="btn-salir" onclick="cerrarSesion()">Salir</button>
+  </div>
+</div>
+
+<!-- ══ CONTENIDO PRINCIPAL ══ -->
+<div id="app-content">
+<div class="inner">
+
+  <!-- Progreso global -->
+  <div class="progreso-wrap" id="progreso-wrap">
+    <div class="progreso-top">
+      <span>Travesía Génesis → Apocalipsis</span>
+      <span id="prog-txt">0 / 330 unidades · 0%</span>
+    </div>
+    <div class="progreso-bar"><div class="progreso-fill" id="prog-fill" style="width:0%"></div></div>
+  </div>
+
+  <!-- Duración y frecuencia -->
+  <div style="display:flex;gap:8px;margin-bottom:14px">
+    <div style="flex:1">
+      <div style="font-size:9px;letter-spacing:2px;color:#C8960C;text-transform:uppercase;margin-bottom:6px">⏱ Duración</div>
+      <div style="display:flex;gap:5px">
+        <button onclick="setDur(45)" id="dur45" class="dur-btn" style="flex:1;padding:8px 4px;border-radius:9px;border:1px solid rgba(200,150,12,0.12);background:transparent;color:#8B7355;font-family:inherit;cursor:pointer;font-size:12px;font-weight:700">45 min</button>
+        <button onclick="setDur(60)" id="dur60" class="dur-btn" style="flex:1;padding:8px 4px;border-radius:9px;border:1px solid #C8960C;background:rgba(200,150,12,0.11);color:#F0C040;font-family:inherit;cursor:pointer;font-size:12px;font-weight:700">1 hora</button>
+        <button onclick="setDur(90)" id="dur90" class="dur-btn" style="flex:1;padding:8px 4px;border-radius:9px;border:1px solid rgba(200,150,12,0.12);background:transparent;color:#8B7355;font-family:inherit;cursor:pointer;font-size:12px;font-weight:700">1h 30</button>
+      </div>
+    </div>
+    <div style="flex:1">
+      <div style="font-size:9px;letter-spacing:2px;color:#C8960C;text-transform:uppercase;margin-bottom:6px">📅 Frecuencia</div>
+      <select id="frec-sel" onchange="FREC=parseInt(this.value)" style="width:100%;padding:9px 10px;background:rgba(0,0,0,0.3);border:1px solid rgba(200,150,12,0.2);border-radius:9px;color:#EDE0C8;font-family:inherit;font-size:12px;outline:none">
+        <option value="1">Diario</option>
+        <option value="2">C/2 días</option>
+        <option value="3">C/3 días</option>
+        <option value="7" selected>Semanal</option>
+        <option value="14">Quincenal</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Buscador -->
+  <input class="buscador" id="buscador" placeholder="Busca el libro que arde en tu corazón..." oninput="renderLibros()"/>
+
+  <!-- Grid categorías/libros -->
+  <div id="cats-container"></div>
+
+</div><!-- /inner -->
+</div><!-- /app-content -->
+
+<!-- ══ MODAL UNIDADES ══ -->
+<div id="modal-overlay">
+  <div class="modal" id="modal-body">
+    <div class="modal-header">
+      <div>
+        <div id="modal-cat-label" style="font-size:9px;letter-spacing:3px;color:#C8960C;text-transform:uppercase;margin-bottom:4px"></div>
+        <div class="modal-titulo" id="modal-titulo">Libro</div>
+      </div>
+      <button class="modal-cerrar" onclick="cerrarModal()">✕ Cerrar</button>
+    </div>
+    <p class="modal-sinopsis" id="modal-sinopsis"></p>
+    <div id="modal-unis"></div>
+  </div>
+</div>
+
+<!-- ══ MODAL ESTUDIO ══ -->
+<div id="modal-estudio">
+  <div class="estudio-sheet">
+    <div class="estudio-header">
+      <div>
+        <div id="est-grupo-label" style="font-size:8px;letter-spacing:2px;color:#C8960C;text-transform:uppercase;margin-bottom:2px"></div>
+        <div class="estudio-titulo" id="est-titulo">Estudio</div>
+      </div>
+      <button class="modal-cerrar" onclick="cerrarEstudio()">✕</button>
+    </div>
+    <div class="estudio-body">
+      <!-- Acciones -->
+      <div class="acciones-row noprint" id="est-acciones"></div>
+      <!-- Compartir -->
+      <div id="est-compartir" style="display:none" class="comp-panel noprint">
+        <div style="font-size:9px;letter-spacing:3px;color:#C8960C;text-transform:uppercase">Enviar estudio</div>
+        <div class="comp-row">
+          <button class="comp-btn" onclick="compartirWA()" style="background:rgba(37,211,102,0.08);border-color:rgba(37,211,102,0.22);color:#25D366">📱 WhatsApp</button>
+          <button class="comp-btn" onclick="descargar()" style="background:rgba(74,127,193,0.08);border-color:rgba(74,127,193,0.22);color:#4A7FC1">⬇ Descargar</button>
+          <button class="comp-btn" onclick="enviarMail()" style="background:rgba(155,110,200,0.08);border-color:rgba(155,110,200,0.22);color:#9B6EC8">✉ Correo</button>
+        </div>
+      </div>
+      <!-- Expertos -->
+      <div id="est-expertos" style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px">
+        <span style="font-size:9px;padding:2px 7px;border-radius:16px;border:1px solid rgba(200,150,12,0.2);color:#C8960C">🌍 Tierras</span>
+        <span style="font-size:9px;padding:2px 7px;border-radius:16px;border:1px solid rgba(200,150,12,0.2);color:#C8960C">🏛️ Teólogo</span>
+        <span style="font-size:9px;padding:2px 7px;border-radius:16px;border:1px solid rgba(200,150,12,0.2);color:#C8960C">💭 Filósofo</span>
+        <span style="font-size:9px;padding:2px 7px;border-radius:16px;border:1px solid rgba(200,150,12,0.2);color:#C8960C">🎓 Educador</span>
+        <span style="font-size:9px;padding:2px 7px;border-radius:16px;border:1px solid rgba(200,150,12,0.2);color:#C8960C">🧠 Psicólogo</span>
+        <span style="font-size:9px;padding:2px 7px;border-radius:16px;border:1px solid rgba(200,150,12,0.2);color:#C8960C">❤️ Amor</span>
+      </div>
+      <!-- Secciones -->
+      <div id="est-secciones"></div>
+      <!-- Footer -->
+      <div class="estudio-footer noprint" id="est-footer"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODO CLASE ══ -->
+<div id="modo-clase">
+  <div class="clase-topbar">
+    <div class="clase-info-left">
+      <span id="clase-emoji" style="font-size:16px"></span>
+      <div>
+        <div id="clase-grupo-label" style="font-size:8px;letter-spacing:2px;text-transform:uppercase"></div>
+        <div id="clase-titulo-label" style="font-size:9px;color:#8B7355;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></div>
+      </div>
+    </div>
+    <div class="clase-info-right">
+      <span id="clase-slide-num" style="font-size:10px;color:#8B7355"></span>
+      <button onclick="cerrarClase()" style="padding:5px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.04);color:#8B7355;cursor:pointer;font-family:inherit;font-size:10px">✕ Salir</button>
+    </div>
+  </div>
+
+  <!-- RELOJ GRANDE -->
+  <div class="clase-reloj" id="clase-reloj">
+    <div class="reloj-bloque">
+      <div class="reloj-label">Tiempo de la Palabra</div>
+      <div class="reloj-num" id="reloj-num">00:00</div>
+    </div>
+    <div class="reloj-sep"></div>
+    <div class="reloj-bloque">
+      <div class="reloj-label">Esta porción</div>
+      <div class="reloj-seccion" id="reloj-sec">— min</div>
+    </div>
+    <div class="reloj-sep"></div>
+    <div class="reloj-bloque">
+      <div class="reloj-label" id="reloj-estado-label">Proclamando</div>
+      <button class="reloj-pausa" id="reloj-pausa-btn" onclick="toggleTimer()">⏸</button>
+    </div>
+  </div>
+
+  <!-- Banner tiempo agotado -->
+  <div id="clase-agotado" style="display:none;padding:9px 18px;text-align:center;font-size:13px;font-weight:900;letter-spacing:1px;animation:pulse 1.5s infinite">
+    ⏰ LA HORA SE CUMPLIÓ — Siembra la Acción de Fe
+  </div>
+
+  <!-- Barra progreso slides -->
+  <div style="height:3px;background:rgba(255,255,255,0.05);flex-shrink:0">
+    <div id="clase-prog-bar" style="height:100%;transition:width .3s"></div>
+  </div>
+
+  <!-- Contenido slide -->
+  <div class="clase-content" id="clase-content"></div>
+
+  <!-- Navegación -->
+  <div class="clase-nav noprint">
+    <button class="nav-btn" id="nav-ant" onclick="slideAnterior()">← Anterior</button>
+    <div class="dots-nav" id="dots-nav"></div>
+    <button class="nav-btn" id="nav-sig" onclick="slideSiguiente()">Siguiente →</button>
+  </div>
+</div>
+
+<!-- ══ FIREBASE SDK ══ -->
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import{getAuth,onAuthStateChanged,signOut}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import{getFirestore,doc,getDoc,setDoc,updateDoc,serverTimestamp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+// ── MISMA CONFIG QUE SALOMÓN IA ──────────────────────────────────
+const FC = {
+  apiKey:            "AIzaSyDXf8R31z2UmL-OqNj3osh5PkR_zTFjEkI",
+  authDomain:        "predicador-inspirado.firebaseapp.com",
+  projectId:         "predicador-inspirado",
+  storageBucket:     "predicador-inspirado.firebasestorage.app",
+  messagingSenderId: "696043042279",
+  appId:             "1:696043042279:web:3e9377cbddf8380fd1f942"
+};
+
+const FB  = initializeApp(FC, "plan-biblico");
+const AUTH = getAuth(FB);
+const DB   = getFirestore(FB);
+
+// ── VERIFICAR SESIÓN Y PLAN ───────────────────────────────────────
+onAuthStateChanged(AUTH, async (user) => {
+  document.getElementById("pantalla-carga").style.display = "none";
+
+  if (!user) {
+    // Accept trial users (localStorage-only, no Firebase account)
+    var trialInicio = localStorage.getItem("pf_trial_inicio");
+    if (trialInicio) {
+      var diasPasados = Math.floor((Date.now() - parseInt(trialInicio)) / 86400000);
+      if (diasPasados < 3) {
+        document.getElementById("header").style.display = "flex";
+        document.getElementById("app-content").style.display = "block";
+        var badge = document.getElementById("user-badge");
+        if (badge) badge.textContent = "Pastor · DEMO";
+        window._UID = "trial"; window._PLAN = "trial"; window._NOMBRE = "Pastor";
+        window.iniciarApp();
+        return;
+      }
+    }
+    document.getElementById("pantalla-login").style.display = "flex";
+    return;
+  }
+
+  // Leer datos del usuario en Firestore
+  try {
+    let U = null;
+    try {
+      const snap = await getDoc(doc(DB, "usuarios", user.uid));
+      U = snap.exists() ? snap.data() : null;
+    } catch(fsErr) {
+      console.warn("Firestore blocked:", fsErr.code);
+      // Allow authenticated users even if Firestore blocks
+      U = { estado: "activo", plan: "ofrenda", nombre: user.displayName || user.email.split("@")[0] };
+    }
+    if (!U) U = { estado: "activo", plan: "ofrenda", nombre: user.email.split("@")[0] };
+    if (U.estado && U.estado !== "activo") {
+      document.getElementById("pantalla-login").style.display = "flex";
+      return;
+    }
+
+    // Verificar plan — ofrenda, iglesia, anual, admin o trial activo
+    const planOK = !U.plan || U.plan === "ofrenda" || U.plan === "iglesia" || U.plan === "anual" || U.rol === "admin" || U.plan === "trial";
+    const trialVigente = U.plan === "gratis" && U.fecha_expiracion &&
+      (U.fecha_expiracion.toDate ? U.fecha_expiracion.toDate() : new Date(U.fecha_expiracion)) > new Date();
+    // Also check localStorage trial
+    var lsTrial = localStorage.getItem("pf_trial_inicio");
+    var lsTrialOK = lsTrial && Math.floor((Date.now() - parseInt(lsTrial)) / 86400000) < 3;
+
+    if (!planOK && !trialVigente && !lsTrialOK) {
+      const msg = U.plan === "gratis"
+        ? "Tu período de prueba ha vencido. Activa un plan para continuar."
+        : "Necesitas un plan activo para acceder al Plan Bíblico.";
+      document.getElementById("upgrade-msg").textContent = msg;
+      document.getElementById("pantalla-upgrade").style.display = "flex";
+      return;
+    }
+
+    // ── ACCESO CONCEDIDO ─────────────────────────────────────────
+    window._UID   = user.uid;
+    window._EMAIL = user.email;
+    window._PLAN  = U.plan || "ofrenda";
+    window._NOMBRE = U.nombre || user.email;
+    window._DB    = DB;
+    window._DOC   = (path) => doc(DB, ...path.split("/"));
+    window._UPD   = updateDoc;
+    window._SRVTS = serverTimestamp;
+
+    // Badge usuario
+    document.getElementById("user-badge").textContent = (U.nombre || user.email).split(" ")[0] + " · " + (U.plan || "").toUpperCase();
+
+    // Mostrar app
+    document.getElementById("header").style.display = "flex";
+    document.getElementById("app-content").style.display = "block";
+
+    // Actualizar último acceso
+    await updateDoc(doc(DB, "usuarios", user.uid), { ultimo_acceso_plan: serverTimestamp() });
+
+    // Iniciar app
+    window.iniciarApp();
+
+  } catch(e) {
+    console.error("Error Firebase:", e);
+    document.getElementById("pantalla-login").style.display = "flex";
+  }
+});
+
+// ── CERRAR SESIÓN ────────────────────────────────────────────────
+window.cerrarSesion = async () => {
+  await signOut(AUTH);
+  window.location.href = "/";
+};
+
+// ── GUARDAR PROGRESO EN FIRESTORE ────────────────────────────────
+window.guardarProgresoFirestore = async (uniId) => {
+  try {
+    const uid = window._UID;
+    if (!uid) return;
+    const ref = doc(DB, "usuarios", uid, "plan_biblico", uniId);
+    await setDoc(ref, { completada: true, fecha: serverTimestamp() }, { merge: true });
+  } catch(e) { console.warn("No se pudo guardar en Firestore:", e); }
+};
+
+// ── CARGAR PROGRESO DESDE FIRESTORE ─────────────────────────────
+window.cargarProgresoFirestore = async () => {
+  try {
+    const uid = window._UID;
+    if (!uid) return {};
+    const { getDocs, collection } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+    const snaps = await getDocs(collection(DB, "usuarios", uid, "plan_biblico"));
+    const prog = {};
+    snaps.forEach(d => { prog[d.id] = true; });
+    return prog;
+  } catch(e) { return {}; }
+};
+</script>
+
+<!-- ══ LÓGICA PRINCIPAL ══ -->
+<script>
+// ── DATOS ────────────────────────────────────────────────────────
+var CATS = {
+  "Pentateuco":          {c:"#5DB85C",bg:"rgba(93,184,92,0.09)",   bd:"rgba(93,184,92,0.3)"},
+  "Libros Historicos":   {c:"#4A7FC1",bg:"rgba(74,127,193,0.09)",  bd:"rgba(74,127,193,0.3)"},
+  "Libros Poeticos":     {c:"#D4A017",bg:"rgba(212,160,23,0.09)",  bd:"rgba(212,160,23,0.3)"},
+  "Profetas Mayores":    {c:"#9B59B6",bg:"rgba(155,89,182,0.09)",  bd:"rgba(155,89,182,0.3)"},
+  "Profetas Menores":    {c:"#E8724A",bg:"rgba(232,114,74,0.09)",  bd:"rgba(232,114,74,0.3)"},
+  "Evangelios":          {c:"#C8960C",bg:"rgba(200,150,12,0.09)",  bd:"rgba(200,150,12,0.35)"},
+  "Historia NT":         {c:"#26A69A",bg:"rgba(38,166,154,0.09)",  bd:"rgba(38,166,154,0.3)"},
+  "Epistolas de Pablo":  {c:"#546E7A",bg:"rgba(84,110,122,0.09)",  bd:"rgba(84,110,122,0.3)"},
+  "Epistolas Generales": {c:"#8D6E63",bg:"rgba(141,110,99,0.09)",  bd:"rgba(141,110,99,0.3)"},
+  "Profecia NT":         {c:"#E53935",bg:"rgba(229,57,53,0.09)",   bd:"rgba(229,57,53,0.3)"}
+};
+
+var LIBROS = [
+  {cat:"Pentateuco",         l:"Génesis",           e:"🌱",s:"Orígenes de la creación, la caída y el inicio de la redención"},
+  {cat:"Pentateuco",         l:"Éxodo",             e:"🔥",s:"Liberación de Israel de Egipto, la Ley y el Tabernáculo"},
+  {cat:"Pentateuco",         l:"Levítico",           e:"🕊️",s:"Los sacrificios, la santidad y el sacerdocio levítico"},
+  {cat:"Pentateuco",         l:"Números",            e:"🏕️",s:"El peregrinaje en el desierto y la fidelidad de Dios"},
+  {cat:"Pentateuco",         l:"Deuteronomio",       e:"📋",s:"El discurso final de Moisés y el pacto renovado"},
+  {cat:"Libros Historicos",  l:"Josué",              e:"⚔️",s:"La conquista de Canaán y el cumplimiento de la promesa"},
+  {cat:"Libros Historicos",  l:"Jueces",             e:"🔄",s:"El ciclo de apostasía, juicio y liberación en Israel"},
+  {cat:"Libros Historicos",  l:"Rut",                e:"🌾",s:"La lealtad de Rut y el amor redentor de Booz"},
+  {cat:"Libros Historicos",  l:"1 Samuel",           e:"👑",s:"Samuel, Saúl y el ascenso de David"},
+  {cat:"Libros Historicos",  l:"2 Samuel",           e:"🗡️",s:"El reino de David y el pacto davídico eterno"},
+  {cat:"Libros Historicos",  l:"1 Reyes",            e:"🏛️",s:"Salomón, el Templo y la división del reino"},
+  {cat:"Libros Historicos",  l:"2 Reyes",            e:"🏚️",s:"La caída de Israel y Judá hacia el exilio"},
+  {cat:"Libros Historicos",  l:"1 Crónicas",         e:"📜",s:"El linaje davídico y la preparación del Templo"},
+  {cat:"Libros Historicos",  l:"2 Crónicas",         e:"📖",s:"Los reyes de Judá hasta la caída de Jerusalén"},
+  {cat:"Libros Historicos",  l:"Esdras",             e:"🏗️",s:"El regreso del exilio y la restauración del culto"},
+  {cat:"Libros Historicos",  l:"Nehemías",           e:"🧱",s:"La reconstrucción de los muros y la renovación del pacto"},
+  {cat:"Libros Historicos",  l:"Ester",              e:"👸",s:"La providencia de Dios y el coraje de Ester"},
+  {cat:"Libros Poeticos",    l:"Job",                e:"⚡",s:"El sufrimiento del justo y la soberanía de Dios"},
+  {cat:"Libros Poeticos",    l:"Salmos",             e:"🎵",s:"150 poemas — toda la experiencia humana ante Dios"},
+  {cat:"Libros Poeticos",    l:"Proverbios",         e:"💡",s:"La sabiduría práctica para vivir en el temor de Dios"},
+  {cat:"Libros Poeticos",    l:"Eclesiastés",        e:"🌬️",s:"La búsqueda del sentido — todo es vanidad fuera de Dios"},
+  {cat:"Libros Poeticos",    l:"Cantares",           e:"🌹",s:"El amor humano como espejo del amor de Dios"},
+  {cat:"Profetas Mayores",   l:"Isaías",             e:"📢",s:"El evangelio del AT — el Siervo sufriente"},
+  {cat:"Profetas Mayores",   l:"Jeremías",           e:"😭",s:"El profeta del llanto y el nuevo pacto prometido"},
+  {cat:"Profetas Mayores",   l:"Lamentaciones",      e:"💔",s:"El lamento poético sobre la caída de Jerusalén"},
+  {cat:"Profetas Mayores",   l:"Ezequiel",           e:"👁️",s:"Visiones de la gloria de Dios y la restauración"},
+  {cat:"Profetas Mayores",   l:"Daniel",             e:"🦁",s:"Fidelidad en el exilio y soberanía sobre las naciones"},
+  {cat:"Profetas Menores",   l:"Oseas",              e:"💍",s:"El amor fiel de Dios a un pueblo adúltero"},
+  {cat:"Profetas Menores",   l:"Joel",               e:"🦗",s:"La plaga y el derramamiento del Espíritu"},
+  {cat:"Profetas Menores",   l:"Amós",               e:"⚖️",s:"La justicia social y el juicio de Dios"},
+  {cat:"Profetas Menores",   l:"Abdías",             e:"🏔️",s:"El juicio sobre Edom y la soberanía de Dios"},
+  {cat:"Profetas Menores",   l:"Jonás",              e:"🐳",s:"La gracia universal y el misionero reacio"},
+  {cat:"Profetas Menores",   l:"Miqueas",            e:"🌟",s:"Juicio y esperanza — el Mesías nacerá en Belén"},
+  {cat:"Profetas Menores",   l:"Nahúm",              e:"⚡",s:"El juicio de Dios sobre Nínive"},
+  {cat:"Profetas Menores",   l:"Habacuc",            e:"❓",s:"El diálogo con Dios — el justo vivirá por la fe"},
+  {cat:"Profetas Menores",   l:"Sofonías",           e:"🔔",s:"El día del Señor y el remanente que canta"},
+  {cat:"Profetas Menores",   l:"Hageo",              e:"🔨",s:"La reconstrucción del Templo como prioridad"},
+  {cat:"Profetas Menores",   l:"Zacarías",           e:"🕊️",s:"El Rey que viene manso sobre un asno"},
+  {cat:"Profetas Menores",   l:"Malaquías",          e:"🌅",s:"El último profeta — el mensajero que prepara el camino"},
+  {cat:"Evangelios",         l:"Mateo",              e:"👑",s:"El Rey Mesías — Jesús cumple Ley y Profetas"},
+  {cat:"Evangelios",         l:"Marcos",             e:"⚡",s:"El Siervo activo — el evangelio en movimiento"},
+  {cat:"Evangelios",         l:"Lucas",              e:"🌍",s:"El Salvador de toda la humanidad — gracia universal"},
+  {cat:"Evangelios",         l:"Juan",               e:"💡",s:"El Verbo encarnado — la divinidad de Cristo"},
+  {cat:"Historia NT",        l:"Hechos",             e:"🌍",s:"La Iglesia en marcha — el Espíritu y la misión"},
+  {cat:"Epistolas de Pablo", l:"Romanos",            e:"📖",s:"La teología de la gracia — el evangelio explicado"},
+  {cat:"Epistolas de Pablo", l:"1 Corintios",        e:"🏛️",s:"Problemas de la iglesia y soluciones del evangelio"},
+  {cat:"Epistolas de Pablo", l:"2 Corintios",        e:"💪",s:"El ministerio y la debilidad como canal de poder"},
+  {cat:"Epistolas de Pablo", l:"Gálatas",            e:"⛓️",s:"La libertad del evangelio — solo por fe"},
+  {cat:"Epistolas de Pablo", l:"Efesios",            e:"🏰",s:"Las riquezas en Cristo y la vida digna del llamado"},
+  {cat:"Epistolas de Pablo", l:"Filipenses",         e:"😊",s:"El gozo en Cristo — la paz sobrenatural"},
+  {cat:"Epistolas de Pablo", l:"Colosenses",         e:"✨",s:"La supremacía de Cristo sobre todo el cosmos"},
+  {cat:"Epistolas de Pablo", l:"1 Tesalonicenses",   e:"🙏",s:"La iglesia modelo y la venida de Cristo"},
+  {cat:"Epistolas de Pablo", l:"2 Tesalonicenses",   e:"🔔",s:"La segunda venida y perseverar hasta el fin"},
+  {cat:"Epistolas de Pablo", l:"1 Timoteo",          e:"👨‍💼",s:"Cómo comportarse en la casa de Dios"},
+  {cat:"Epistolas de Pablo", l:"2 Timoteo",          e:"🔥",s:"Guarda el depósito de la fe — la última carta"},
+  {cat:"Epistolas de Pablo", l:"Tito",               e:"🏝️",s:"El orden en la iglesia y la gracia que educa"},
+  {cat:"Epistolas de Pablo", l:"Filemón",            e:"🤝",s:"La reconciliación en Cristo — el esclavo perdonado"},
+  {cat:"Epistolas Generales",l:"Hebreos",            e:"🕍",s:"Cristo superior a todo — el Sumo Sacerdote perfecto"},
+  {cat:"Epistolas Generales",l:"Santiago",           e:"⚒️",s:"La fe que obra — la ética del evangelio"},
+  {cat:"Epistolas Generales",l:"1 Pedro",            e:"🪨",s:"El sufrimiento por Cristo y la esperanza viva"},
+  {cat:"Epistolas Generales",l:"2 Pedro",            e:"⚠️",s:"Guardarse de falsos maestros — crecer en gracia"},
+  {cat:"Epistolas Generales",l:"1 Juan",             e:"❤️",s:"Dios es amor — la comunión con el Padre"},
+  {cat:"Epistolas Generales",l:"2 Juan",             e:"💌",s:"Caminar en verdad y amor"},
+  {cat:"Epistolas Generales",l:"3 Juan",             e:"🫂",s:"La hospitalidad cristiana y el testimonio fiel"},
+  {cat:"Epistolas Generales",l:"Judas",              e:"🛡️",s:"Contender por la fe — el peligro de los intrusos"},
+  {cat:"Profecia NT",        l:"Apocalipsis",        e:"🔑",s:"La consumación — Cristo vence y todo es hecho nuevo"}
+];
+
+var ORDEN_CATS = ["Pentateuco","Libros Historicos","Libros Poeticos","Profetas Mayores","Profetas Menores","Evangelios","Historia NT","Epistolas de Pablo","Epistolas Generales","Profecia NT"];
+
+var GRUPOS = {
+  ninos:      {n:"Niños",       ag:"Semillas",        e:"🌱",c:"#5DB85C",bg:"rgba(93,184,92,0.09)",  bd:"rgba(93,184,92,0.28)"},
+  jovenes:    {n:"Jóvenes",     ag:"Raíces",          e:"🔥",c:"#E8724A",bg:"rgba(232,114,74,0.09)", bd:"rgba(232,114,74,0.28)"},
+  caballeros: {n:"Caballeros",  ag:"Teólogos de Piel",e:"⚔️",c:"#4A7FC1",bg:"rgba(74,127,193,0.09)",bd:"rgba(74,127,193,0.28)"},
+  damas:      {n:"Damas/Dorcas",ag:"Dorcas",          e:"🕊️",c:"#9B6EC8",bg:"rgba(155,110,200,0.09)",bd:"rgba(155,110,200,0.28)"}
+};
+
+// ── ESTADO ───────────────────────────────────────────────────────
+var DUR  = 60;
+var FREC = 7;
+var PROG = {};            // {uniId: true}
+var UNI_MAP = {};         // {libro: [unidades]}
+var libroActual = null;
+var uniActual   = null;
+var grupoActual = null;
+var estudios    = {};     // {clave: texto}
+var catAbiertas = {Pentateuco: true};
+var secAbiertas = {};
+var compartirOpen = false;
+
+// Modo clase
+var SLIDES      = [];
+var SLIDE_I     = 0;
+var TIMER_SEG   = 0;
+var TIMER_ON    = false;
+var TIMER_INT   = null;
+var TIMER_LIM   = 3600;
+
+// ── UTILIDADES ───────────────────────────────────────────────────
+var norm = function(s){ return s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase(); };
+var fmtT = function(s){ var m=Math.floor(s/60),ss=s%60; return (m<10?"0":"")+m+":"+(ss<10?"0":"")+ss; };
+var cc   = function(cat){ return CATS[cat]||CATS["Pentateuco"]; };
+
+function totalComp(){ return Object.keys(PROG).length; }
+function pctComp(){ return Math.round((totalComp()/330)*100); }
+
+// ── DURACIÓN ─────────────────────────────────────────────────────
+function setDur(v){
+  DUR = v;
+  document.querySelectorAll(".dur-btn").forEach(function(b){ b.style.borderColor="rgba(200,150,12,0.12)"; b.style.background="transparent"; b.style.color="#8B7355"; });
+  var el = document.getElementById("dur"+v);
+  if(el){ el.style.borderColor="#C8960C"; el.style.background="rgba(200,150,12,0.11)"; el.style.color="#F0C040"; }
+}
+
+// ── PROGRESO ─────────────────────────────────────────────────────
+function actualizarProgreso(){
+  var t=totalComp(), p=pctComp();
+  var el=document.getElementById("prog-txt"); if(el) el.textContent=t+" / 330 unidades · "+p+"%";
+  var fill=document.getElementById("prog-fill"); if(fill) fill.style.width=p+"%";
+}
+
+// ── RENDER LIBROS ────────────────────────────────────────────────
+function renderLibros(){
+  var busq = document.getElementById("buscador").value||"";
+  var container = document.getElementById("cats-container");
+  if(!container) return;
+  container.innerHTML = "";
+
+  ORDEN_CATS.forEach(function(cat){
+    var libros = LIBROS.filter(function(b){ return b.cat===cat && (busq ? norm(b.l).includes(norm(busq)) : true); });
+    if(!libros.length) return;
+    var C = cc(cat);
+    var ab = !!catAbiertas[cat];
+    var us_comp = libros.reduce(function(s,b){ return s+(UNI_MAP[b.l]?UNI_MAP[b.l].filter(function(u){return PROG[u.id];}).length:0); },0);
+
+    var bloque = document.createElement("div");
+    bloque.className="cat-bloque"+(ab?" abierta":"");
+    bloque.style.setProperty("--cat-c",C.c); bloque.style.setProperty("--cat-bg",C.bg); bloque.style.setProperty("--cat-bd",C.bd);
+    if(ab){ bloque.style.borderColor=C.bd; bloque.style.background=C.bg; }
+
+    var badge = us_comp>0 ? '<span class="cat-badge">'+us_comp+'/'+libros.length*5+' ✓</span>' : '';
+    bloque.innerHTML = '<button class="cat-header" onclick="toggleCat(\''+cat+'\')">'
+      +'<div style="display:flex;align-items:center;gap:10px">'
+      +'<div class="cat-dot" style="background:'+C.c+'"></div>'
+      +'<span class="cat-nombre">'+cat+'</span>'
+      +'<span class="cat-meta">'+libros.length+' libros</span>'
+      +'</div>'
+      +'<div style="display:flex;align-items:center;gap:7px">'+badge+'<span class="cat-flecha">'+(ab?"▲":"▼")+'</span></div>'
+      +'</button>';
+
+    if(ab){
+      var grid = document.createElement("div");
+      grid.className="libros-grid";
+      libros.forEach(function(lib){
+        var us=UNI_MAP[lib.l]||[];
+        var comp=us.filter(function(u){return PROG[u.id];}).length;
+        var done=comp===5&&us.length>0;
+        var btn=document.createElement("button");
+        btn.className="libro-btn"+(done?" done":"");
+        if(done){btn.style.setProperty("--cat-c",C.c);btn.style.setProperty("--cat-bg",C.bg);btn.style.setProperty("--cat-bd",C.bd);btn.style.borderColor=C.bd;btn.style.background=C.bg;}
+        btn.innerHTML='<div class="libro-emoji">'+lib.e+'</div>'
+          +'<div class="libro-nombre">'+lib.l+'</div>'
+          +(comp>0?'<div class="libro-progreso">'+comp+'/5 ✓</div>':'');
+        btn.onclick=function(){ abrirLibro(lib); };
+        grid.appendChild(btn);
+      });
+      bloque.appendChild(grid);
+    }
+    container.appendChild(bloque);
+  });
+}
+
+function toggleCat(cat){
+  catAbiertas[cat]=!catAbiertas[cat];
+  renderLibros();
+}
+
+// ── ABRIR LIBRO ──────────────────────────────────────────────────
+function abrirLibro(lib){
+  libroActual = lib;
+  var C = cc(lib.cat);
+  document.getElementById("modal-cat-label").textContent=lib.emoji+" "+lib.cat;
+  document.getElementById("modal-titulo").textContent=lib.l;
+  document.getElementById("modal-sinopsis").textContent=lib.s;
+  document.getElementById("modal-overlay").classList.add("show");
+  renderUnidades();
+}
+
+function cerrarModal(){
+  document.getElementById("modal-overlay").classList.remove("show");
+}
+
+function renderUnidades(){
+  var container=document.getElementById("modal-unis");
+  var lib=libroActual;
+  if(!lib){return;}
+  var us=UNI_MAP[lib.l];
+  var C=cc(lib.cat);
+
+  if(!us){
+    container.innerHTML='<div class="cargando-unis"><div class="spin-sm"></div>Desglosando la Palabra de '+lib.l+'...</div>';
+    generarUnidades(lib);
+    return;
+  }
+
+  container.innerHTML="";
+  us.forEach(function(u,i){
+    var done=PROG[u.id];
+    var btn=document.createElement("button");
+    btn.className="uni-item"+(done?" done":"");
+    btn.style.setProperty("--cat-c",C.c);
+    var temas=(u.temas||[]).map(function(t,ti){return '<div class="uni-tema"><span style="color:'+C.c+';font-weight:700">'+(ti+1)+'.</span><span>'+t+'</span></div>';}).join("");
+    btn.innerHTML='<div class="uni-num">'+(done?"✓":(i+1))+'</div>'
+      +'<div class="uni-info">'
+      +'<div class="uni-titulo">'+u.titulo+'</div>'
+      +'<div class="uni-pasajes">'+u.pasajes+'</div>'
+      +temas+'</div>'
+      +'<div class="uni-flecha">→</div>';
+    btn.onclick=function(){ uniActual=u; abrirGrupoSel(); };
+    container.appendChild(btn);
+  });
+}
+
+// ── GENERAR UNIDADES ─────────────────────────────────────────────
+function generarUnidades(lib){
+  var id=lib.l.toLowerCase().replace(/\s/g,"").replace(/[^a-z]/g,"").substring(0,6);
+  var prompt="Eres el PLANIFICADOR CURRICULAR de PredicaFacil.\n"
+    +"Genera 5 unidades de estudio para el libro biblico: "+lib.l+"\n"
+    +"Sinopsis: "+lib.s+"\n\n"
+    +"Cada unidad: titulo evocador, pasajes especificos, 3 temas de ensenanza.\n"
+    +"RESPONDE SOLO con JSON valido (sin markdown, sin texto adicional):\n"
+    +'[{"id":"'+id+'_01","titulo":"...","pasajes":"...","temas":["...","...","..."]},'
+    +'{"id":"'+id+'_02","titulo":"...","pasajes":"...","temas":["...","...","..."]},'
+    +'{"id":"'+id+'_03","titulo":"...","pasajes":"...","temas":["...","...","..."]},'
+    +'{"id":"'+id+'_04","titulo":"...","pasajes":"...","temas":["...","...","..."]},'
+    +'{"id":"'+id+'_05","titulo":"...","pasajes":"...","temas":["...","...","..."]}]';
+
+  llamarAPI(prompt).then(function(txt){
+    var m=txt.match(/\[[\s\S]*\]/);
+    if(!m){ document.getElementById("modal-unis").innerHTML='<p style="color:#FF9090;font-size:12px;text-align:center">Error al generar. Intenta de nuevo.</p>'; return; }
+    try{
+      var us=JSON.parse(m[0]);
+      UNI_MAP[lib.l]=us;
+      renderUnidades();
+    }catch(e){ document.getElementById("modal-unis").innerHTML='<p style="color:#FF9090;font-size:12px;text-align:center">Error al parsear. Intenta de nuevo.</p>'; }
+  }).catch(function(){
+    document.getElementById("modal-unis").innerHTML='<p style="color:#FF9090;font-size:12px;text-align:center">Error de conexión.</p>';
+  });
+}
+
+// ── SELECCIÓN DE GRUPO ───────────────────────────────────────────
+function abrirGrupoSel(){
+  var u=uniActual;
+  var lib=libroActual;
+  if(!u||!lib) return;
+  var C=cc(lib.cat);
+  var html='<div style="font-size:10px;letter-spacing:2px;color:'+C.c+';text-transform:uppercase;margin-bottom:6px">'+lib.e+' '+lib.l+'</div>'
+    +'<div style="font-size:16px;font-weight:700;color:#EDE0C8;margin-bottom:4px">'+u.titulo+'</div>'
+    +'<div style="font-size:11px;color:#8B7355;margin-bottom:14px">'+u.pasajes+'</div>'
+    +'<div style="font-size:9px;letter-spacing:3px;color:#8B6914;text-transform:uppercase;margin-bottom:10px">¿A quién proclamas hoy?</div>';
+  Object.entries(GRUPOS).forEach(function(pair){
+    var key=pair[0], g=pair[1];
+    var clave=u.id+"_"+key+"_"+DUR;
+    var ok=!!estudios[clave];
+    html+='<button onclick="abrirEstudio(\''+key+'\')" style="display:flex;align-items:center;gap:12px;padding:13px 15px;width:100%;border-radius:12px;border:1px solid '+(ok?g.bd:"rgba(255,255,255,0.07)")+';background:'+(ok?g.bg:"rgba(255,255,255,0.02)")+';cursor:pointer;text-align:left;font-family:inherit;margin-bottom:7px">'
+      +'<span style="font-size:22px">'+g.e+'</span>'
+      +'<div style="flex:1"><div style="font-size:13px;font-weight:700;color:'+(ok?g.c:"#EDE0C8")+'">'+g.n+'</div><div style="font-size:10px;color:#8B7355">'+g.ag+'</div></div>'
+      +'<span style="font-size:9px;padding:3px 8px;border-radius:16px;border:1px solid '+(ok?g.bd:"rgba(255,255,255,0.05)")+';color:'+(ok?g.c:"#4A3D28")+'">'+(ok?"✓ Revelado":"Revelar")+'</span>'
+      +'</button>';
+  });
+  document.getElementById("modal-unis").innerHTML=html;
+}
+
+// ── ABRIR ESTUDIO ────────────────────────────────────────────────
+function abrirEstudio(key){
+  grupoActual=key;
+  var g=GRUPOS[key];
+  var u=uniActual;
+  var lib=libroActual;
+  if(!u||!lib) return;
+  var clave=u.id+"_"+key+"_"+DUR;
+
+  document.getElementById("est-grupo-label").textContent=g.e+" "+g.ag+" · "+fmtDur(DUR);
+  document.getElementById("est-titulo").textContent=g.n+" — "+lib.l+" · "+u.titulo;
+  document.getElementById("est-expertos").style.display="flex";
+  var C=cc(lib.cat);
+
+  // Actualizar colores expertos
+  document.querySelectorAll("#est-expertos span").forEach(function(s){ s.style.color=g.c; s.style.borderColor=g.bd||"rgba(200,150,12,0.2)"; });
+
+  document.getElementById("modal-estudio").classList.add("show");
+  secAbiertas={};
+  compartirOpen=false;
+
+  if(estudios[clave]){
+    renderEstudio(clave, g, u, lib);
+    return;
+  }
+
+  // Generar
+  document.getElementById("est-secciones").innerHTML='<div style="text-align:center;padding:32px 0"><div class="spin-sm"></div><p style="color:#8B7355;font-size:12px">El Consejo de 6 Expertos abre la Palabra...</p><p style="font-size:10px;color:#4A3D28;margin-top:8px;font-style:italic">Teólogo · Filósofo · Educador · Psicólogo · Tierras · Amor</p></div>';
+  document.getElementById("est-acciones").innerHTML="";
+  document.getElementById("est-footer").innerHTML="";
+
+  var prompt=buildPromptEstudio(lib.l,u,key,DUR);
+  llamarAPI(prompt).then(function(txt){
+    estudios[clave]=txt;
+    renderEstudio(clave, g, u, lib);
+  }).catch(function(){
+    document.getElementById("est-secciones").innerHTML='<p style="color:#FF9090;font-size:12px;text-align:center;padding:20px">Error de conexión. Intenta de nuevo.</p>';
+  });
+}
+
+function cerrarEstudio(){
+  document.getElementById("modal-estudio").classList.remove("show");
+}
+
+function fmtDur(v){ return v===45?"45 min":v===60?"1 hora":"1h 30"; }
+
+// ── RENDER ESTUDIO ───────────────────────────────────────────────
+function parseSecs(txt){
+  if(!txt) return [];
+  return txt.split("\n## ").map(function(b,i){
+    var ls=b.split("\n");
+    var titulo=(i===0?ls[0].replace("## ",""):ls[0]).trim();
+    var cuerpo=ls.slice(1).join("\n").trim();
+    return {titulo:titulo,cuerpo:cuerpo};
+  }).filter(function(b){return b.titulo&&b.cuerpo;});
+}
+
+function esAcc(s){return s.titulo.includes("ACCION")||s.titulo.includes("AMOR");}
+function esGui(s){return s.titulo.includes("GUIA")||s.titulo.includes("DOCENTE")||s.titulo.includes("PASTOR");}
+function esVer(s){return s.titulo.includes("VERSICULO");}
+
+function renderCuerpoConPreguntas(cuerpo){
+  var partes=cuerpo.split(/(PREGUNTA AL GRUPO[^:\n]*:[^\n]*)/g);
+  var html="";
+  partes.forEach(function(p){
+    if(p.match(/^PREGUNTA AL GRUPO/)){
+      var txt=p.replace(/^PREGUNTA AL GRUPO[^:]*:\s*/,"");
+      html+='<div class="pregunta-box">'
+        +'<div class="pregunta-label">Pregunta al grupo</div>'
+        +'<div class="pregunta-txt">'+txt+'</div>'
+        +'</div>';
+    } else if(p.trim()){
+      html+='<span style="white-space:pre-wrap">'+p+'</span>';
+    }
+  });
+  return html;
+}
+
+function renderEstudio(clave, g, u, lib){
+  var txt=estudios[clave]||"";
+  var secs=parseSecs(txt);
+  var accSec=secs.find(esAcc);
+  var guiSec=secs.find(esGui);
+  var verSec=secs.find(esVer);
+  var restSec=secs.filter(function(s){return !esGui(s);});
+
+  // Acciones
+  var acEl=document.getElementById("est-acciones");
+  acEl.innerHTML='<button class="acc-btn" onclick="iniciarClase()" style="background:'+g.bg+';border-color:'+g.bd+';color:'+g.c+'">▶ Proclamar · '+fmtDur(DUR)+'</button>'
+    +'<button class="acc-btn" onclick="toggleCompartir()" style="background:rgba(200,150,12,0.06);border-color:rgba(200,150,12,0.22);color:#C8960C">↗ Enviar</button>'
+    +'<button class="acc-btn noprint" onclick="window.print()" style="background:rgba(255,255,255,0.03);border-color:rgba(255,255,255,0.07);color:#8B7355">🖨</button>';
+
+  // Secciones
+  var secEl=document.getElementById("est-secciones");
+  secEl.innerHTML="";
+
+  // Versículo (Niños)
+  if(verSec){
+    secEl.innerHTML+='<div class="sec-bloque versiculo">'
+      +'<button class="sec-btn" onclick="toggleSec(\'ver\')">'
+      +'<div><div class="sec-label" style="color:#5DB85C">✦ Para grabar en el corazón</div><div class="sec-nombre">'+verSec.titulo+'</div></div>'
+      +'<span style="color:#5DB85C;font-size:11px">▼</span></button>'
+      +'<div class="sec-cuerpo" id="sec-ver" style="display:none">'+verSec.cuerpo+'</div></div>';
+  }
+
+  // Acción de Fe
+  if(accSec){
+    secEl.innerHTML+='<div class="sec-bloque accion">'
+      +'<button class="sec-btn" onclick="toggleSec(\'acc\')">'
+      +'<div><div class="sec-label" style="color:#C8960C">🔥 La Iglesia actúa · Reportar próxima clase</div><div class="sec-nombre">'+accSec.titulo+'</div></div>'
+      +'<span style="color:#C8960C;font-size:11px">▼</span></button>'
+      +'<div class="sec-cuerpo" id="sec-acc" style="display:none">'+accSec.cuerpo+'</div></div>';
+  }
+
+  // Resto de secciones
+  restSec.filter(function(s){return !esAcc(s)&&!esVer(s);}).forEach(function(sec,i){
+    secEl.innerHTML+='<div class="sec-bloque">'
+      +'<button class="sec-btn" onclick="toggleSec('+i+')">'
+      +'<span style="font-size:12px;font-weight:700;color:#EDE0C8">'+sec.titulo+'</span>'
+      +'<span style="color:#8B7355;font-size:10px">▼</span></button>'
+      +'<div class="sec-cuerpo" id="sec-'+i+'" style="display:none">'+renderCuerpoConPreguntas(sec.cuerpo)+'</div></div>';
+  });
+
+  // Guía Docente
+  if(guiSec){
+    secEl.innerHTML+='<div class="sec-bloque">'
+      +'<button class="sec-btn" onclick="toggleSec(\'gui\')">'
+      +'<div><div class="sec-label" style="color:#4A3D28">Solo para el Heraldo</div><div class="sec-nombre" style="color:#8B7355">'+guiSec.titulo+'</div></div>'
+      +'<span style="color:#4A3D28;font-size:10px">▼</span></button>'
+      +'<div class="sec-cuerpo" id="sec-gui" style="display:none;color:#8B7355">'+guiSec.cuerpo+'</div></div>';
+  }
+
+  // Footer
+  var footEl=document.getElementById("est-footer");
+  var isDone=PROG[u.id];
+  footEl.innerHTML='<button class="footer-btn" onclick="cerrarEstudio()">← Volver</button>'
+    +(isDone?"":'<button class="footer-btn" onclick="marcarCompleta(\''+u.id+'\')" style="background:rgba(93,184,92,0.08);border-color:rgba(93,184,92,0.25);color:#5DB85C">✓ ¡Conquistada!</button>')
+    +'<button class="footer-btn" onclick="regenerarEstudio(\''+clave+'\')" style="background:'+g.bg+';border-color:'+g.bd+';color:'+g.c+'">↻ Nueva Revelación</button>';
+}
+
+function toggleSec(id){
+  var el=document.getElementById("sec-"+id);
+  if(!el) return;
+  el.style.display=el.style.display==="none"?"block":"none";
+}
+
+function toggleCompartir(){
+  compartirOpen=!compartirOpen;
+  document.getElementById("est-compartir").style.display=compartirOpen?"block":"none";
+}
+
+// ── MARCAR COMPLETADA ────────────────────────────────────────────
+function marcarCompleta(uniId){
+  PROG[uniId]=true;
+  localStorage.setItem("pf_prog",JSON.stringify(PROG));
+  if(window.guardarProgresoFirestore) window.guardarProgresoFirestore(uniId);
+  actualizarProgreso();
+  renderLibros();
+  // Actualizar footer
+  var u=uniActual;
+  var g=GRUPOS[grupoActual];
+  if(u&&g) renderEstudio(u.id+"_"+grupoActual+"_"+DUR,g,u,libroActual);
+}
+
+function regenerarEstudio(clave){
+  delete estudios[clave];
+  abrirEstudio(grupoActual);
+}
+
+// ── COMPARTIR ────────────────────────────────────────────────────
+function textoEstudio(){
+  var u=uniActual, lib=libroActual, g=GRUPOS[grupoActual]||{n:""};
+  var clave=u.id+"_"+grupoActual+"_"+DUR;
+  var secs=parseSecs(estudios[clave]||"");
+  var sep1="========================================";
+  var sep2="----------------------------------------";
+  var out="PREDICAFACIL — "+lib.l+" · "+u.titulo+"\n"
+    +"Renglón: "+g.n+" · "+fmtDur(DUR)+"\n"+sep1+"\n\n";
+  secs.forEach(function(s){ out+=s.titulo+"\n"+sep2+"\n"+s.cuerpo+"\n\n"; });
+  out+="predicafacil.cl";
+  return out;
+}
+function compartirWA(){ window.open("https://wa.me/?text="+encodeURIComponent(textoEstudio()),"_blank"); }
+function descargar(){
+  var blob=new Blob([textoEstudio()],{type:"text/plain;charset=utf-8"});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement("a");
+  a.href=url; a.download=(libroActual?libroActual.l:"estudio").replace(/\s/g,"_")+".txt"; a.click();
+  URL.revokeObjectURL(url);
+}
+function enviarMail(){
+  var t=libroActual?libroActual.l+" · "+uniActual.titulo:"Estudio";
+  window.location.href="mailto:?subject="+encodeURIComponent("Estudio: "+t)+"&body="+encodeURIComponent(textoEstudio());
+}
+
+// ── MODO CLASE ───────────────────────────────────────────────────
+function iniciarClase(){
+  var u=uniActual, lib=libroActual, g=GRUPOS[grupoActual];
+  if(!u||!lib||!g) return;
+  var clave=u.id+"_"+grupoActual+"_"+DUR;
+  var secs=parseSecs(estudios[clave]||"");
+  var verSec=secs.find(esVer);
+  var restSec=secs.filter(function(s){return !esGui(s);});
+
+  // Slide 0: revisión acción de fe
+  var slideRev={titulo:"APERTURA — Testimonio Vivo",cuerpo:"Antes de comenzar, abre el espacio para el testimonio.\n\nPREGUNTA AL GRUPO: ¿Quién quiere compartir cómo le fue con la Acción Práctica de Fe de la semana pasada?\n\nDa tiempo real. El testimonio edifica al grupo entero.\n\nSi nadie comparte: sin presión. Recuerda la Acción de Fe de esta clase al cerrar."};
+
+  SLIDES = [slideRev].concat(
+    verSec
+      ? restSec.filter(function(s){return !esVer(s);}).concat([verSec])
+      : restSec
+  );
+  SLIDE_I=0;
+  TIMER_LIM=DUR*60;
+  TIMER_SEG=TIMER_LIM;
+
+  // Colores del grupo
+  document.getElementById("modo-clase").style.setProperty("--cfg-c",g.c);
+  document.getElementById("modo-clase").style.setProperty("--cfg-bd",g.bd);
+  document.getElementById("modo-clase").style.setProperty("--cfg-bg",g.bg);
+  document.getElementById("clase-reloj").style.setProperty("--cfg-c",g.c);
+
+  document.getElementById("clase-emoji").textContent=g.e;
+  document.getElementById("clase-grupo-label").textContent=g.n+" · "+fmtDur(DUR);
+  document.getElementById("clase-grupo-label").style.color=g.c;
+  document.getElementById("clase-titulo-label").textContent=lib.l+" — "+u.titulo;
+  document.getElementById("reloj-sec").style.color=g.c;
+
+  // Estilos reloj
+  var relojEl=document.getElementById("clase-reloj");
+  relojEl.style.borderBottom="1px solid "+g.bd;
+
+  // Nav buttons color
+  var navBtns=document.querySelectorAll(".nav-btn");
+  navBtns.forEach(function(b){ b.style.color=g.c; b.style.borderColor=g.bd; });
+  document.getElementById("nav-sig").style.background=g.bg;
+
+  document.getElementById("modo-clase").classList.add("show");
+  renderSlide();
+  iniciarTimer();
+}
+
+function cerrarClase(){
+  pararTimer();
+  document.getElementById("modo-clase").classList.remove("show");
+}
+
+function renderSlide(){
+  var sec=SLIDES[SLIDE_I];
+  if(!sec) return;
+  var total=SLIDES.length;
+  var g=GRUPOS[grupoActual]||{c:"#C8960C",bd:"rgba(200,150,12,0.3)",bg:"rgba(200,150,12,0.09)"};
+  var esRev=SLIDE_I===0;
+  var isAcc=esAcc(sec);
+
+  // Color título
+  var titColor=esRev?"#5DB85C":isAcc?"#F0C040":g.c;
+
+  // Tiempo por sección
+  var segRev=Math.round(TIMER_LIM*0.12);
+  var segPorSlide=total>1?Math.round((TIMER_LIM-segRev)/(total-1)):TIMER_LIM;
+  var segActual=SLIDE_I===0?segRev:segPorSlide;
+  document.getElementById("reloj-sec").textContent=Math.round(segActual/60)+" min";
+
+  // Slide num
+  document.getElementById("clase-slide-num").textContent=(SLIDE_I+1)+"/"+total;
+
+  // Barra progreso
+  var pct=Math.round(((SLIDE_I+1)/total)*100);
+  document.getElementById("clase-prog-bar").style.width=pct+"%";
+  document.getElementById("clase-prog-bar").style.background=g.c;
+
+  // Contenido
+  var content=document.getElementById("clase-content");
+  var cuerpo=renderCuerpoConPreguntas(sec.cuerpo);
+  content.innerHTML='<div class="slide-titulo" style="color:'+titColor+'">'+(esRev?"✦ ":"")+sec.titulo+'</div>'
+    +'<div class="slide-cuerpo">'+cuerpo+'</div>';
+
+  // Dots
+  var dotsEl=document.getElementById("dots-nav");
+  dotsEl.innerHTML="";
+  for(var i=0;i<total;i++){
+    var d=document.createElement("div");
+    d.className="dot-nav";
+    d.style.background=i===SLIDE_I?g.c:"rgba(255,255,255,0.1)";
+    d.style.width=i===0?"14px":"7px";
+    (function(idx){d.onclick=function(){SLIDE_I=idx;renderSlide();};})(i);
+    dotsEl.appendChild(d);
+  }
+
+  // Botones nav
+  var ant=document.getElementById("nav-ant");
+  var sig=document.getElementById("nav-sig");
+  ant.style.color=SLIDE_I===0?"#333":g.c;
+  ant.style.borderColor=g.bd;
+  ant.disabled=SLIDE_I===0;
+  sig.style.color=SLIDE_I===total-1?"#333":g.c;
+  sig.style.background=SLIDE_I===total-1?"transparent":g.bg;
+  sig.disabled=SLIDE_I===total-1;
+}
+
+function slideAnterior(){ if(SLIDE_I>0){SLIDE_I--;renderSlide();} }
+function slideSiguiente(){ if(SLIDE_I<SLIDES.length-1){SLIDE_I++;renderSlide();} }
+
+// ── TIMER COUNTDOWN ──────────────────────────────────────────────
+function iniciarTimer(){
+  pararTimer();
+  TIMER_ON=true;
+  actualizarReloj();
+  TIMER_INT=setInterval(function(){
+    if(!TIMER_ON) return;
+    if(TIMER_SEG<=0){
+      pararTimer();
+      document.getElementById("clase-agotado").style.display="block";
+      document.getElementById("clase-agotado").style.background="rgba(229,57,53,0.2)";
+      document.getElementById("clase-agotado").style.borderBottom="1px solid rgba(229,57,53,0.5)";
+      document.getElementById("clase-agotado").style.color="#E53935";
+      return;
+    }
+    TIMER_SEG--;
+    actualizarReloj();
+  },1000);
+}
+
+function pararTimer(){ TIMER_ON=false; if(TIMER_INT){clearInterval(TIMER_INT);TIMER_INT=null;} }
+
+function toggleTimer(){
+  TIMER_ON=!TIMER_ON;
+  document.getElementById("reloj-pausa-btn").textContent=TIMER_ON?"⏸":"▶";
+  document.getElementById("reloj-estado-label").textContent=TIMER_ON?"Proclamando":"En reposo";
+  if(TIMER_ON&&!TIMER_INT){
+    TIMER_INT=setInterval(function(){
+      if(!TIMER_ON){clearInterval(TIMER_INT);TIMER_INT=null;return;}
+      if(TIMER_SEG<=0){pararTimer();document.getElementById("clase-agotado").style.display="block";return;}
+      TIMER_SEG--;
+      actualizarReloj();
+    },1000);
+  }
+}
+
+function actualizarReloj(){
+  var el=document.getElementById("reloj-num");
+  var pausa=document.getElementById("reloj-pausa-btn");
+  var estadoLbl=document.getElementById("reloj-estado-label");
+  var relojWrap=document.getElementById("clase-reloj");
+
+  var color=TIMER_SEG<=60?"#E53935":TIMER_SEG<=TIMER_LIM*0.2?"#F59E0B":"#F0C040";
+  var glow=TIMER_SEG<=60?"0 0 20px rgba(229,57,53,0.5)":"0 0 20px "+color+"44";
+
+  el.textContent=fmtT(TIMER_SEG);
+  el.style.color=color;
+  el.style.textShadow=glow;
+  el.style.animation=TIMER_SEG<=60&&TIMER_ON?"pulse 1s ease-in-out infinite":"none";
+
+  if(TIMER_SEG<=60){
+    relojWrap.style.background="rgba(229,57,53,0.1)";
+    relojWrap.style.borderBottom="1px solid rgba(229,57,53,0.4)";
+  } else {
+    relojWrap.style.background="rgba(0,0,0,0.3)";
+  }
+
+  pausa.style.borderColor=TIMER_ON?"rgba(229,57,53,0.5)":"rgba(93,184,92,0.5)";
+  pausa.style.color=TIMER_ON?"#E53935":"#5DB85C";
+  pausa.style.background=TIMER_ON?"rgba(229,57,53,0.1)":"rgba(93,184,92,0.1)";
+  pausa.textContent=TIMER_ON?"⏸":"▶";
+  estadoLbl.textContent=TIMER_ON?"Proclamando":"En reposo";
+}
+
+// ── LLAMAR API ───────────────────────────────────────────────────
+function llamarAPI(prompt){
+  return fetch("https://api.anthropic.com/v1/messages",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:2500,messages:[{role:"user",content:prompt}]})
+  }).then(function(r){
+    if(!r.ok) return r.json().then(function(e){throw new Error(e&&e.error?e.error.message:"HTTP "+r.status);});
+    return r.json();
+  }).then(function(d){
+    var b=d.content&&d.content.find(function(x){return x.type==="text";});
+    return b?b.text:"";
+  });
+}
+
+// ── PROMPTS ──────────────────────────────────────────────────────
+function distTiempo(d){
+  if(d===45) return "Revision accion fe anterior 5min|Tema1 10min|Tema2 10min|Tema3 10min|Accion 10min";
+  if(d===60) return "Revision accion fe anterior 5min|Tema1 14min|Tema2 14min|Tema3 14min|Accion 13min";
+  return "Revision accion fe anterior 10min|Tema1 20min|Tema2 20min|Tema3 20min|Accion 20min";
+}
+
+function buildPromptEstudio(libro, u, grupoKey, durMin){
+  var g=GRUPOS[grupoKey];
+  var esNinos=grupoKey==="ninos";
+  return "Eres el CONSEJO DE 6 EXPERTOS de PredicaFacil (predicafacil.cl).\n\n"
+    +"EXPERTOS: Tierras y Costumbres | Teologo | Filosofo | Educador | Psicologo | Apostol del Amor\n\n"
+    +"LIBRO: "+libro+" | UNIDAD: "+u.titulo+" | PASAJES: "+u.pasajes+"\n"
+    +"RENGLON: "+g.n+" ("+g.ag+") | DURACION: "+durMin+" min\n"
+    +"DISTRIBUCION: "+distTiempo(durMin)+"\n\n"
+    +"TEMAS:\n1. "+u.temas[0]+"\n2. "+u.temas[1]+"\n3. "+u.temas[2]+"\n\n"
+    +"ENTREGA con estos encabezados exactos:\n\n"
+    +"## CONTEXTO TIERRAS Y COSTUMBRES\n"
+    +"Contexto geografico, cultural, arqueologico. Max 120 palabras.\n\n"
+    +"## TEMA 1\n[Teologo] Exposicion exegetica.\n[Filosofo] Pregunta existencial.\n[Educador+Psicologo] Estrategia pedagogica.\nPREGUNTA AL GRUPO: [pregunta concreta]\n\n"
+    +"## TEMA 2\n[Teologo] Exposicion exegetica.\n[Filosofo] Pregunta existencial.\n[Educador+Psicologo] Estrategia pedagogica.\nPREGUNTA AL GRUPO: [pregunta concreta]\n\n"
+    +"## TEMA 3\n[Teologo] Exposicion exegetica.\n[Filosofo] Pregunta existencial.\n[Educador+Psicologo] Estrategia pedagogica.\nPREGUNTA AL GRUPO: [pregunta concreta]\n\n"
+    +"## HILO ETERNO\nComo los 3 temas revelan el proposito de Dios y apuntan a Cristo.\n\n"
+    +(esNinos?"## VERSICULO PARA MEMORIZAR\nVersiculo corto + metodo ludico.\n\n":"")
+    +"## ACCION PRACTICA DE FE — AMOR AL PROJIMO\nAccion concreta de amor al projimo. Especifica. Al inicio de la proxima clase preguntar: Quien comparte como le fue?\n\n"
+    +"## GUIA DOCENTE — PARA EL PASTOR\nComo ensenar en "+durMin+" minutos. Error comun a evitar.";
+}
+
+// ── INICIAR APP ──────────────────────────────────────────────────
+window.iniciarApp = function(){
+  // Cargar progreso: primero localStorage, luego Firestore
+  var local={};
+  try{ local=JSON.parse(localStorage.getItem("pf_prog")||"{}"); }catch(e){}
+  PROG=local;
+
+  actualizarProgreso();
+  renderLibros();
+
+  // Sincronizar con Firestore en background
+  if(window.cargarProgresoFirestore){
+    window.cargarProgresoFirestore().then(function(fsProg){
+      Object.assign(PROG,fsProg);
+      localStorage.setItem("pf_prog",JSON.stringify(PROG));
+      actualizarProgreso();
+      renderLibros();
+    });
+  }
+};
+</script>
+</body>
+</html>
