@@ -1154,6 +1154,170 @@ html,body{width:100%;min-height:100%;overflow-x:hidden;background:#E8F4FF;}
 .tema-opt.active{background:var(--acc2);border-color:var(--acc3);}
 .tema-dot{width:18px;height:18px;border-radius:50%;flex-shrink:0;}
 .tema-name{font-size:.75rem;font-weight:700;color:var(--txt);text-align:left;}
+
+/* ════════════════════════════════════════════
+   NOCHE PROFUNDA — TEMA DEFINITIVO
+   Aplica a TODOS los elementos del app
+════════════════════════════════════════════ */
+
+/* Variables base */
+:root {
+  --bg:    #071433;
+  --hdr:   #0A1628;
+  --acc:   #B8962E;
+  --acc2:  rgba(184,150,46,.12);
+  --txt:   #F0F4FF;
+  --txt2:  rgba(200,215,255,.6);
+  --brd:   rgba(255,255,255,.09);
+  --card:  rgba(255,255,255,.05);
+  --inp:   rgba(255,255,255,.07);
+  --nav:   #0A1628;
+}
+
+/* App containers */
+body, #p-app { background: var(--bg) !important; }
+.mod { background: var(--bg) !important; color: var(--txt) !important; }
+
+/* Header principal */
+#cab { background: var(--hdr) !important; border-bottom: 1px solid var(--brd) !important; }
+.ct { color: var(--txt) !important; }
+.cs { color: var(--acc) !important; }
+.bh { color: var(--txt2) !important; background: transparent !important; border-color: var(--brd) !important; }
+
+/* Nav bar */
+#nav, #nav-scroll-container, .nb-wrap { background: var(--nav) !important; border-top: 1px solid var(--brd) !important; }
+.nb { color: var(--txt2) !important; }
+.nb.on { color: var(--acc) !important; }
+.nbi { filter: none !important; }
+
+/* Module headers */
+.mod-uni-hdr { background: var(--hdr) !important; border-bottom: 1px solid var(--brd) !important; }
+.mod-uni-hdr-tit { color: var(--txt) !important; }
+.mod-uni-hdr-sub { color: var(--txt2) !important; }
+
+/* Inputs universales */
+input, textarea, select {
+  background: var(--inp) !important;
+  border-color: var(--brd) !important;
+  color: var(--txt) !important;
+}
+input::placeholder, textarea::placeholder { color: var(--txt2) !important; }
+input:focus, textarea:focus, select:focus {
+  border-color: var(--acc) !important;
+  outline: none !important;
+}
+select option { background: #0A1628; color: var(--txt); }
+
+/* Botones primarios */
+.bbn, .brf, .dvs-btn, .est-gen-btn, .pas-send-btn,
+button[style*="background:linear-gradient"] { }
+/* Botones generales que deben heredar tema */
+.bat, .bat2 {
+  background: var(--acc) !important;
+  color: #fff !important;
+  border: none !important;
+}
+
+/* Sermon module */
+.sl { background: var(--bg) !important; }
+.sl-hdr, .sl-form { background: var(--hdr) !important; border-color: var(--brd) !important; }
+.sl-inp, .sl-sel { background: var(--inp) !important; border-color: var(--brd) !important; color: var(--txt) !important; }
+.sl-sec-tit { color: var(--acc) !important; }
+.sbx { background: var(--bg) !important; }
+#sout { color: var(--txt) !important; background: var(--bg) !important; }
+#sout h2, #sout h3 { color: var(--acc) !important; }
+#sout strong { color: var(--txt) !important; }
+.hi { background: var(--card) !important; border-color: var(--brd) !important; }
+.hip { color: var(--txt) !important; }
+.him { color: var(--txt2) !important; }
+
+/* Agente module */
+.agc { background: var(--hdr) !important; border-color: var(--brd) !important; }
+.agn { color: var(--txt) !important; }
+.age { color: var(--acc) !important; }
+#cmsg .bbl { background: var(--card) !important; color: var(--txt) !important; }
+.bba { background: var(--hdr) !important; }
+.cin { background: var(--hdr) !important; border-color: var(--brd) !important; }
+.cic { background: var(--inp) !important; color: var(--txt) !important; border-color: var(--brd) !important; }
+
+/* Biblia module */
+.bsr { background: var(--hdr) !important; border-color: var(--brd) !important; }
+.bsl { background: var(--inp) !important; color: var(--txt) !important; border-color: var(--brd) !important; }
+.bbn { background: var(--acc) !important; color: #fff !important; border: none !important; }
+.vb { background: var(--card) !important; color: var(--txt2) !important; border-color: var(--brd) !important; }
+.vb.on { background: var(--acc2) !important; color: var(--acc) !important; border-color: var(--acc) !important; }
+.btxt { background: var(--bg) !important; }
+.bbrf { color: var(--acc) !important; }
+.bvn { color: var(--acc) !important; }
+.bvt { color: var(--txt) !important; }
+.bph { color: var(--txt2) !important; }
+
+/* Corrector */
+.cor-inp, .cor-ta { background: var(--inp) !important; color: var(--txt) !important; border-color: var(--brd) !important; }
+.cor-res { background: var(--card) !important; color: var(--txt) !important; border-color: var(--brd) !important; }
+
+/* Devocional */
+.dvf { background: var(--hdr) !important; color: var(--txt) !important; border-color: var(--brd) !important; }
+.dvs { color: var(--acc) !important; }
+.pac-item { background: var(--card) !important; border-color: var(--brd) !important; }
+.pac-hdr { background: transparent !important; }
+.pac-tit { color: var(--txt) !important; }
+.pac-sub { color: var(--txt2) !important; }
+.pac-body { background: var(--card) !important; }
+.pac-verse { border-color: var(--brd) !important; }
+.pac-verse-num { color: var(--acc) !important; }
+.pac-verse-txt { color: var(--txt) !important; }
+#pac-progreso { background: var(--card) !important; border-color: var(--brd) !important; }
+
+/* Comunidad */
+.ctb2s { background: var(--hdr) !important; border-color: var(--brd) !important; }
+.ctb2 { color: var(--txt2) !important; background: transparent !important; }
+.ctb2.on { color: var(--acc) !important; border-color: var(--acc) !important; }
+.cp2 { background: var(--bg) !important; }
+.mcm { color: var(--txt) !important; }
+.mca { color: var(--txt2) !important; }
+.mct { color: var(--txt) !important; }
+
+/* Estudio */
+.est-tabs { background: var(--hdr) !important; border-color: var(--brd) !important; }
+.est-tab { color: var(--txt2) !important; background: transparent !important; }
+.est-tab.on { color: var(--acc) !important; border-color: var(--acc) !important; }
+.est-input-wrap { background: var(--hdr) !important; border-color: var(--brd) !important; }
+.est-input { background: var(--inp) !important; color: var(--txt) !important; border-color: var(--brd) !important; }
+.est-card { background: var(--card) !important; border-color: var(--brd) !important; }
+.est-card-body { background: var(--bg) !important; color: var(--txt) !important; }
+.est-res { background: var(--bg) !important; }
+#est-resultado { background: var(--bg) !important; }
+
+/* Pastor */
+.pas-hdr { background: var(--hdr) !important; border-color: var(--brd) !important; }
+.pas-hdr-tit { color: var(--txt) !important; }
+.pas-area-btn { background: var(--card) !important; color: var(--txt2) !important; border-color: var(--brd) !important; }
+.pas-area-btn.on { background: var(--acc2) !important; color: var(--acc) !important; border-color: var(--acc) !important; }
+.pas-bbl { color: var(--txt) !important; }
+.pas-inp { background: var(--inp) !important; color: var(--txt) !important; border-color: var(--brd) !important; }
+
+/* Canon/Apócrifos */
+.can-hdr { background: var(--hdr) !important; border-color: var(--brd) !important; }
+.can-hdr-tit { color: var(--txt) !important; }
+.can-hdr-sub { color: var(--txt2) !important; }
+.can-cat { background: var(--card) !important; color: var(--txt2) !important; border-color: var(--brd) !important; }
+.can-cat.on { color: var(--acc) !important; border-color: var(--acc) !important; }
+.can-li { background: var(--card) !important; border-color: var(--brd) !important; }
+.can-li-t { color: var(--txt) !important; }
+
+/* Erudito/Datos */
+.atl-hdr { background: var(--hdr) !important; border-color: var(--brd) !important; }
+
+/* Settings/Tienda */
+.msec { color: var(--txt2) !important; }
+.mst { color: var(--txt) !important; }
+.bat2 { background: var(--acc) !important; color: #fff !important; }
+
+/* Scrollbars */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--brd); border-radius: 2px; }
 </style>
 </head>
 <body>
@@ -1265,18 +1429,54 @@ html,body{width:100%;min-height:100%;overflow-x:hidden;background:#E8F4FF;}
   </div>
 
   <!-- OVERLAY CURIOSIDAD -->
-  <div class="atl-curio-overlay" id="atl-overlay">
-    <div class="atl-curio-cat" id="atl-ov-cat">ARQUEOLOGÍA</div>
-    <div class="atl-curio-ico" id="atl-ov-ico">🏺</div>
-    <div class="atl-curio-tit" id="atl-ov-tit">Título</div>
-    <div class="atl-curio-txt" id="atl-ov-txt">Texto</div>
-    <div class="atl-curio-ref" id="atl-ov-ref">Ref</div>
-    <div class="atl-curio-btns">
-      <button class="atl-curio-next" onclick="atlOtro()">✨ Ver otra curiosidad</button>
-      <button class="atl-curio-go" onclick="atlIrSermon()">📜 Crear Prédica →</button>
-      <button onclick="atlCerrarOverlay()" style="padding:10px;background:transparent;border:1px solid rgba(255,255,255,.1);border-radius:10px;cursor:pointer;font-size:.75rem;font-weight:700;color:rgba(255,255,255,.4);">← Volver a los globos</button>
+  <div id="atl-overlay" style="position:fixed;inset:0;z-index:100;background:rgba(5,10,25,.97);display:flex;flex-direction:column;overflow:hidden;">
+
+  <!-- HEADER del agente -->
+  <div style="padding:12px 14px;background:#0A1628;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:10px;flex-shrink:0;">
+    <div id="atl-ag-ico" style="font-size:1.6rem;width:40px;height:40px;border-radius:50%;background:rgba(184,150,46,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;">🏛️</div>
+    <div style="flex:1;">
+      <div id="atl-ag-nombre" style="font-size:.88rem;font-weight:900;color:#F0F4FF;">Agente Arqueología</div>
+      <div id="atl-ov-cat" style="font-size:.6rem;color:#B8962E;font-weight:900;letter-spacing:.08em;">ARQUEOLOGÍA BÍBLICA</div>
+    </div>
+    <button onclick="atlCerrarOverlay()" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:.8rem;color:rgba(255,255,255,.6);">✕</button>
+  </div>
+
+  <!-- Curiosidad del día (tarjeta inicial) -->
+  <div id="atl-curio-card" style="margin:12px 14px;background:rgba(184,150,46,.08);border:1px solid rgba(184,150,46,.2);border-radius:14px;padding:14px;flex-shrink:0;">
+    <div style="display:flex;align-items:flex-start;gap:10px;">
+      <span id="atl-ov-ico" style="font-size:1.8rem;flex-shrink:0;">🏺</span>
+      <div>
+        <div id="atl-ov-tit" style="font-size:.88rem;font-weight:900;color:#F0F4FF;line-height:1.3;margin-bottom:5px;">Título</div>
+        <div id="atl-ov-txt" style="font-size:.76rem;color:rgba(200,215,255,.75);line-height:1.6;">Texto</div>
+        <div id="atl-ov-ref" style="font-size:.62rem;color:#B8962E;margin-top:6px;font-weight:700;">Referencia</div>
+      </div>
+    </div>
+    <button onclick="atlOtro()" style="width:100%;margin-top:10px;padding:7px;background:rgba(184,150,46,.12);border:1px solid rgba(184,150,46,.25);border-radius:8px;cursor:pointer;font-size:.72rem;font-weight:900;color:#B8962E;">🎲 Otra curiosidad</button>
+  </div>
+
+  <!-- Chat con el agente -->
+  <div id="atl-chat-msgs" style="flex:1;overflow-y:auto;padding:8px 14px;display:flex;flex-direction:column;gap:8px;min-height:0;-webkit-overflow-scrolling:touch;">
+    <div id="atl-chat-bienvenida" style="background:rgba(255,255,255,.05);border-radius:10px;padding:10px 12px;">
+      <div style="font-size:.7rem;font-weight:900;color:#B8962E;margin-bottom:4px;">El Agente te puede responder:</div>
+      <div style="font-size:.72rem;color:rgba(200,215,255,.7);line-height:1.5;">Escribe cualquier pregunta sobre este tema bíblico. El agente especializado te responderá con evidencia, contexto histórico y conexión con la Palabra.</div>
     </div>
   </div>
+
+  <!-- Input del chat -->
+  <div style="padding:10px 14px;background:#0A1628;border-top:1px solid rgba(255,255,255,.08);flex-shrink:0;">
+    <div style="display:flex;gap:8px;margin-bottom:8px;">
+      <button onclick="atlPreguntaRapida('¿Qué dice la Biblia sobre esto?')" style="flex:1;padding:6px 8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;cursor:pointer;font-size:.65rem;color:rgba(200,215,255,.6);">📖 ¿Qué dice la Biblia?</button>
+      <button onclick="atlPreguntaRapida('Dame más evidencia histórica')" style="flex:1;padding:6px 8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;cursor:pointer;font-size:.65rem;color:rgba(200,215,255,.6);">🔍 Más evidencia</button>
+      <button onclick="atlPreguntaRapida('¿Cómo puedo usar esto en un sermón?')" style="flex:1;padding:6px 8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;cursor:pointer;font-size:.65rem;color:rgba(200,215,255,.6);">📜 Para mi sermón</button>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <textarea id="atl-chat-inp" rows="1" placeholder="Pregunta al agente especializado..." style="flex:1;padding:10px 12px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:10px;color:#F0F4FF;font-size:.8rem;font-family:inherit;outline:none;resize:none;max-height:80px;"
+        onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();atlEnviarPregunta();}"></textarea>
+      <button onclick="atlEnviarPregunta()" id="atl-send-btn" style="width:42px;height:42px;background:linear-gradient(135deg,#B8962E,#8B6914);border:none;border-radius:10px;cursor:pointer;font-size:1.1rem;flex-shrink:0;">➤</button>
+    </div>
+    <button onclick="atlIrSermon()" style="width:100%;margin-top:8px;padding:8px;background:linear-gradient(135deg,#1B5E20,#2E7D32);border:none;border-radius:8px;cursor:pointer;font-size:.72rem;font-weight:900;color:#fff;">📜 Crear Sermón con esta curiosidad →</button>
+  </div>
+</div>
 
   <!-- TEXTO BIENVENIDA -->
   <div class="atl-welcome">
@@ -1597,11 +1797,11 @@ html,body{width:100%;min-height:100%;overflow-x:hidden;background:#E8F4FF;}
   </div>
 
   <!-- Hidden compatibility elements -->
-  <span id="t-n" style="display:none"></span>
-  <span id="t-pl" style="display:none"></span>
-  <span id="t-pg" style="display:none"></span>
-  <span id="t-ex" style="display:none"></span>
-  <span id="pn" style="display:none"></span>
+  
+  
+  
+  
+  
 
   <!-- FAB -->
   <button onclick="pant('atlas')" style="position:fixed;bottom:20px;right:16px;z-index:99;width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#B8962E,#8B6914);border:none;cursor:pointer;font-size:1.2rem;box-shadow:0 4px 20px rgba(184,150,46,.5);">✨</button>
@@ -2047,6 +2247,7 @@ html,body{width:100%;min-height:100%;overflow-x:hidden;background:#E8F4FF;}
     <!-- ASISTENTE DEL PASTOR -->
     <!-- COMENTARISTAS — Agente Maestro de la Fe -->
 <div id="mod-comentaristas" class="mod" style="background:#0D0800;flex-direction:column;">
+  <div class="mod-uni-hdr"><span class="mod-uni-hdr-ico">🎓</span><div><div class="mod-uni-hdr-tit">Maestro de la Fe</div><div class="mod-uni-hdr-sub">Grandes pensadores del cristianismo</div></div><div class="mod-uni-hdr-acc"></div></div>
   <div style="padding:12px 14px;background:linear-gradient(135deg,#3E2400,#5C3A00);border-bottom:1px solid rgba(255,213,79,.15);flex-shrink:0;">
     <div style="display:flex;align-items:center;gap:8px;">
       <span style="font-size:1.3rem;">🎓</span>
@@ -2558,6 +2759,7 @@ window.entrarDemo = function() {
   if (banner) { banner.style.display = "block"; }
   var dtEl = G("dias-txt"); if(dtEl) dtEl.textContent = rest;
   G("t-n").textContent = "Usuario Demo";
+  try { localStorage.setItem("pf_nombre","Pastor"); localStorage.setItem("pf_plan","trial"); } catch(e) {}
   G("t-pl").textContent = "Plan: PRUEBA GRATUITA";
   G("t-pg").textContent = rest;
   G("t-ex").textContent = rest + " dia" + (rest === 1 ? "" : "s") + " restante" + (rest === 1 ? "" : "s");
@@ -2656,6 +2858,8 @@ window.APP = {
       iniciarDev(); renderH();
       pant("inicio");
       toast("Bienvenido " + (U.nombre || "") + " ✝");
+      // Save user info for sub-pages
+      try { localStorage.setItem("pf_nombre", U.nombre || U.email || "Pastor"); localStorage.setItem("pf_plan", U.plan || "ofrenda"); } catch(e) {}
       // Cargar admin data
       window._DB = db;
       window._UID = uid;
@@ -3752,6 +3956,24 @@ setTimeout(function() {
 
 // BIBLIA_LOCAL cargada externamente desde biblia_completa.js
 
+// Buscar versiculo en biblia local (offline)
+function bibliaLocal(libro, cap) {
+  if (typeof BIBLIA_LOCAL === "undefined") return null;
+  var b = BIBLIA_LOCAL[libro];
+  if (!b) {
+    var norm = libro.normalize("NFD").replace(/[̀-ͯ]/g,"");
+    Object.keys(BIBLIA_LOCAL).forEach(function(k) {
+      if (!b && k.normalize("NFD").replace(/[̀-ͯ]/g,"") === norm) b = BIBLIA_LOCAL[k];
+    });
+  }
+  if (!b) return null;
+  var ch = b[String(parseInt(cap))];
+  return ch || null;
+}
+function bibliaLibroDisponible(libro) {
+  return typeof BIBLIA_LOCAL !== "undefined" && !!BIBLIA_LOCAL[libro];
+}
+
 // Alias para compatibilidad
 window.pacActualizarProgreso = function() {
   if (window.planActualizarProgreso) planActualizarProgreso();
@@ -4801,11 +5023,176 @@ window.atlIniciar = function() {
   if (rachaEl) rachaEl.textContent = '🔥 Día ' + racha;
 };
 
+
+// ═══════════════════════════════════════════════════════
+// AGENTES BÍBLICOS ESPECIALIZADOS — Atlas de Curiosidades
+// ═══════════════════════════════════════════════════════
+
+var ATL_AGENTES = {
+  arqueologia: {
+    nombre: "Agente Arqueología",
+    ico: "🏛️",
+    color: "#B8962E",
+    system: "Eres el Agente de Arqueología Bíblica de Salomón IA. Eres un arqueólogo bíblico experto con conocimiento profundo de excavaciones, hallazgos y evidencias físicas que corroboran las Escrituras. Tus respuestas son: 1) Basadas en hallazgos arqueológicos reales y datados. 2) Siempre conectadas a pasajes bíblicos específicos. 3) Pastorales: usas la evidencia para fortalecer la fe. 4) Concretas: citas nombres de sitios, excavadores, fechas. Solo hablas de arqueología con relación a la Biblia. Responde en 3-5 párrafos máximo."
+  },
+  historia: {
+    nombre: "Agente Historia",
+    ico: "📜",
+    color: "#1565C0",
+    system: "Eres el Agente de Historia Bíblica de Salomón IA. Eres un historiador experto en el mundo antiguo del Medio Oriente: Mesopotamia, Egipto, Persia, Grecia, Roma — y cómo estos imperios se relacionan con la narrativa bíblica. Tus respuestas: 1) Contextualizan los eventos bíblicos en su marco histórico real. 2) Citan fuentes históricas externas que confirman la Escritura (Josefo, Heródoto, inscripciones reales). 3) Son pastorales y edificantes. Solo hablas de historia conectada a la Biblia. Responde en 3-5 párrafos."
+  },
+  ciencia: {
+    nombre: "Agente Ciencia",
+    ico: "🧬",
+    color: "#1B5E20",
+    system: "Eres el Agente de Ciencia Bíblica de Salomón IA. Eres un científico cristiano experto en mostrar cómo los descubrimientos modernos de física, biología, astronomía, medicina y cosmología son coherentes con la Palabra de Dios. Tus respuestas: 1) Son científicamente precisas. 2) Muestran la coherencia entre fe y ciencia. 3) Citan versículos que anticiparon verdades científicas. 4) Son apologéticas: fortalecen la credibilidad de la Escritura. Responde en 3-5 párrafos."
+  },
+  linguistica: {
+    nombre: "Agente Lingüística",
+    ico: "✍️",
+    color: "#4A148C",
+    system: "Eres el Agente de Lingüística Bíblica de Salomón IA. Eres un lingüista y filólogo experto en hebreo bíblico, griego koiné y arameo. Desvelar el significado profundo de las palabras originales de la Escritura. Tus respuestas: 1) Explican el significado original de palabras clave en hebreo/griego. 2) Muestran matices que las traducciones no capturan completamente. 3) Conectan el significado lingüístico con la doctrina y la vida cristiana. 4) Usan transliteraciones simples (no caracteres hebreos/griegos complejos). Responde en 3-5 párrafos."
+  },
+  numeros: {
+    nombre: "Agente Numerología",
+    ico: "🔢",
+    color: "#B71C1C",
+    system: "Eres el Agente de Numerología Bíblica de Salomón IA. Eres un experto en el simbolismo numérico en la Biblia: el significado teológico de los números 7, 12, 40, 70, 666, etc. Tus respuestas: 1) Explican el significado simbólico bíblico de los números. 2) Conectan patrones numéricos a través del AT y NT. 3) Son teológicamente sólidas (no numerología esotérica ni cabalística). 4) Muestran cómo Dios usó los números para comunicar su carácter y propósito. Responde en 3-5 párrafos."
+  },
+  todos: {
+    nombre: "Agente Bíblico",
+    ico: "✨",
+    color: "#B8962E",
+    system: "Eres el Agente Bíblico de Salomón IA. Eres un experto multidisciplinario en arqueología, historia, ciencia, lingüística y numerología bíblica. Respondes preguntas bíblicas con profundidad académica y corazón pastoral. Siempre centrado en las Escrituras. Responde en 3-5 párrafos."
+  }
+};
+
+var ATL_CAT_ACTUAL = 'todos';
+var ATL_HISTORIAL = [];
+
+// Mostrar curiosidad con agente correcto
 window.atlMostrarCategoria = function(cat) {
+  ATL_CAT_ACTUAL = cat;
+  ATL_HISTORIAL = [];
   ATL_FILTRADOS = cat === 'todos' ? ATL_DATOS.slice() : ATL_DATOS.filter(function(d){return d.cat===cat;});
   ATL_IDX = Math.floor(Math.random() * ATL_FILTRADOS.length);
+
+  // Update agent UI
+  var ag = ATL_AGENTES[cat] || ATL_AGENTES.todos;
+  var el_ico = G('atl-ag-ico');
+  var el_nombre = G('atl-ag-nombre');
+  if (el_ico) el_ico.textContent = ag.ico;
+  if (el_nombre) el_nombre.textContent = ag.nombre;
+
+  // Show curiosity
   atlMostrarOverlay();
+
+  // Reset chat
+  ATL_HISTORIAL = [];
+  var chat = G('atl-chat-msgs');
+  if (chat) {
+    chat.innerHTML = '<div id="atl-chat-bienvenida" style="background:rgba(255,255,255,.05);border-radius:10px;padding:10px 12px;"><div style="font-size:.7rem;font-weight:900;color:'+ag.color+';margin-bottom:4px;">'+ag.ico+' '+ag.nombre+'</div><div style="font-size:.72rem;color:rgba(200,215,255,.7);line-height:1.5;">Soy tu experto en '+ag.nombre.replace('Agente ','')+' bíblica. Pregúntame cualquier cosa sobre este tema — tengo evidencias, contexto histórico y conexiones con la Palabra de Dios.</div></div>';
+  }
 };
+
+window.atlOtro = function() {
+  ATL_HISTORIAL = [];
+  if (!ATL_FILTRADOS || !ATL_FILTRADOS.length) return;
+  ATL_IDX = (ATL_IDX + 1) % ATL_FILTRADOS.length;
+  atlMostrarOverlay();
+  var chat = G('atl-chat-msgs');
+  if (chat) {
+    var ag = ATL_AGENTES[ATL_CAT_ACTUAL] || ATL_AGENTES.todos;
+    chat.innerHTML = '<div style="text-align:center;padding:8px;font-size:.68rem;color:rgba(200,215,255,.4);">Nueva curiosidad cargada. Puedes preguntarme sobre ella.</div>';
+  }
+};
+
+window.atlPreguntaRapida = function(pregunta) {
+  var inp = G('atl-chat-inp');
+  if (inp) { inp.value = pregunta; atlEnviarPregunta(); }
+};
+
+window.atlEnviarPregunta = async function() {
+  var inp = G('atl-chat-inp');
+  if (!inp) return;
+  var pregunta = inp.value.trim();
+  if (!pregunta) return;
+  inp.value = '';
+  inp.style.height = 'auto';
+
+  var chat = G('atl-chat-msgs');
+  if (!chat) return;
+
+  // Get current curiosity for context
+  var d = ATL_FILTRADOS ? ATL_FILTRADOS[ATL_IDX] : null;
+  var contexto = d ? 'Curiosidad actual: "'+d.tit+'" — '+d.txt : '';
+
+  // Add user message
+  var userDiv = document.createElement('div');
+  userDiv.style.cssText = 'display:flex;justify-content:flex-end;';
+  userDiv.innerHTML = '<div style="background:rgba(184,150,46,.15);border:1px solid rgba(184,150,46,.25);border-radius:10px;padding:9px 12px;max-width:85%;font-size:.78rem;color:#FFE0B2;line-height:1.5;">'+esc(pregunta)+'</div>';
+  chat.appendChild(userDiv);
+
+  // Add loading
+  var loadDiv = document.createElement('div');
+  var ag = ATL_AGENTES[ATL_CAT_ACTUAL] || ATL_AGENTES.todos;
+  loadDiv.innerHTML = '<div style="display:flex;align-items:center;gap:8px;"><div style="width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;">'+ag.ico+'</div><div class="ru" style="margin:0;width:24px;height:24px;"></div></div>';
+  chat.appendChild(loadDiv);
+  chat.scrollTop = chat.scrollHeight;
+
+  // Build messages with history
+  ATL_HISTORIAL.push({role:'user', content: (contexto ? '[Contexto: '+contexto+'] ' : '') + pregunta});
+
+  try {
+    var resp = await fetch('/.netlify/functions/agente_fantasma', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        accion: 'llamada_directa',
+        token: Date.now()+'.'+Math.random().toString(36).substr(2,8),
+        datos: {
+          system: ag.system,
+          messages: ATL_HISTORIAL,
+          max_tokens: 1000
+        }
+      })
+    });
+    var data = await resp.json().catch(function(){return {};});
+    var texto = data.texto || 'No pude conectarme. Verifica tu conexión.';
+
+    // Save to history
+    ATL_HISTORIAL.push({role:'assistant', content: texto});
+    if (ATL_HISTORIAL.length > 10) ATL_HISTORIAL = ATL_HISTORIAL.slice(-10);
+
+    // Remove loading and add response
+    chat.removeChild(loadDiv);
+    var resDiv = document.createElement('div');
+    resDiv.style.cssText = 'display:flex;align-items:flex-start;gap:8px;';
+    resDiv.innerHTML = '<div style="width:28px;height:28px;border-radius:50%;background:rgba('+ag.color.replace('#','')+', .15);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;">'+ag.ico+'</div>'
+      + '<div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:10px 12px;flex:1;font-size:.76rem;color:rgba(200,215,255,.9);line-height:1.65;white-space:pre-line;">'+esc(texto)+'</div>';
+    chat.appendChild(resDiv);
+
+  } catch(err) {
+    chat.removeChild(loadDiv);
+    var errDiv = document.createElement('div');
+    errDiv.innerHTML = '<div style="font-size:.72rem;color:#EF9A9A;padding:8px;">Error: '+esc(err.message)+'</div>';
+    chat.appendChild(errDiv);
+  }
+
+  chat.scrollTop = chat.scrollHeight;
+};
+
+// Auto-resize textarea
+setTimeout(function(){
+  var inp = G('atl-chat-inp');
+  if (inp) inp.addEventListener('input', function(){
+    this.style.height = 'auto';
+    this.style.height = Math.min(this.scrollHeight, 80) + 'px';
+  });
+}, 1000);
+
+// legacy fallback
+var _atlCatLegacy = true;
 
 function atlMostrarOverlay() {
   var d = ATL_FILTRADOS[ATL_IDX];
@@ -5821,36 +6208,6 @@ renderChatLocal();
 
 
 <script src="biblia_completa.js"></script>
-
-<!-- ═══ SELECTOR DE TEMA FLOTANTE ═══ -->
-<button id="tema-fab" onclick="temaToggle()" title="Cambiar tema">🎨</button>
-<div id="tema-panel">
-  <div style="font-size:.65rem;font-weight:900;color:var(--txt2);letter-spacing:.1em;padding:0 4px 4px;">ELIGE TU TEMA</div>
-  <button class="tema-opt active" id="topt-noche" onclick="temaAplicar('noche',this)">
-    <div class="tema-dot" style="background:#071433;border:2px solid #B8962E;"></div>
-    <span class="tema-name">Noche Profunda</span>
-  </button>
-  <button class="tema-opt" id="topt-azul" onclick="temaAplicar('azul',this)">
-    <div class="tema-dot" style="background:#1A237E;"></div>
-    <span class="tema-name">Azul Pastoral</span>
-  </button>
-  <button class="tema-opt" id="topt-esmeralda" onclick="temaAplicar('esmeralda',this)">
-    <div class="tema-dot" style="background:#004D3B;border:2px solid #B8962E;"></div>
-    <span class="tema-name">Esmeralda Bíblica</span>
-  </button>
-  <button class="tema-opt" id="topt-carbon" onclick="temaAplicar('carbon',this)">
-    <div class="tema-dot" style="background:#1A1A1A;border:2px solid #D4AF37;"></div>
-    <span class="tema-name">Carbón y Oro</span>
-  </button>
-  <button class="tema-opt" id="topt-luz" onclick="temaAplicar('luz',this)">
-    <div class="tema-dot" style="background:#fff;border:2px solid #0D2B5E;"></div>
-    <span class="tema-name">Luz Divina</span>
-  </button>
-  <button class="tema-opt" id="topt-rosa" onclick="temaAplicar('rosa',this)">
-    <div class="tema-dot" style="background:#DB2777;border:2px solid #831843;"></div>
-    <span class="tema-name">Rosa Pastoral ✨</span>
-  </button>
-</div>
 
 <script>
 // ═══ SISTEMA DE TEMAS ═══
