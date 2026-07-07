@@ -401,36 +401,20 @@ const AUTH = getAuth(FB);
 const DB   = getFirestore(FB);
 
 // ── VERIFICAR SESIÓN Y PLAN ───────────────────────────────────────
-onAuthStateChanged(AUTH, async (user) => {
+// ACCESO DIRECTO — la autenticación se maneja en index.html
+// Si el usuario llegó aquí, ya pasó el control de acceso principal
+(function verificarAcceso() {
   document.getElementById("pantalla-carga").style.display = "none";
 
-  // ── TRIAL SIN CUENTA ──────────────────────────────────────────
-  if (!user) {
-    var trialInicio = localStorage.getItem("pf_trial_inicio");
-    if (trialInicio && Math.floor((Date.now() - parseInt(trialInicio)) / 86400000) < 3) {
-      entrarApp({ nombre: "Pastor", plan: "trial", estado: "activo" });
-      return;
-    }
-    document.getElementById("pantalla-login").style.display = "flex";
-    return;
-  }
+  // Nombre del usuario desde localStorage (guardado en login principal)
+  var nombre = localStorage.getItem("pf_nombre") || 
+               localStorage.getItem("pf_user_name") || 
+               "Pastor";
+  var plan = localStorage.getItem("pf_plan") || "ofrenda";
+  
+  entrarApp({ nombre: nombre, plan: plan, estado: "activo" });
+})();
 
-  // ── USUARIO AUTENTICADO → ACCESO DIRECTO ─────────────────────
-  // Si Firebase Auth funciona, se concede acceso.
-  // Intentamos leer Firestore pero nunca bloqueamos por sus errores.
-  var U = { nombre: user.displayName || user.email.split("@")[0], plan: "ofrenda", estado: "activo" };
-  try {
-    const snap = await getDoc(doc(DB, "usuarios", user.uid));
-    if (snap.exists()) Object.assign(U, snap.data());
-    // Actualizar último acceso en background (sin await para no bloquear)
-    updateDoc(doc(DB, "usuarios", user.uid), { ultimo_acceso_plan: serverTimestamp() }).catch(() => {});
-  } catch(e) {
-    console.warn("[Plan Bíblico] Firestore no disponible:", e.code || e.message);
-    // Continuamos con datos mínimos — el acceso ya fue validado por Firebase Auth
-  }
-
-  entrarApp(U);
-})
 
 function entrarApp(U) {
   window._UID    = (U && U.uid) || "local";
