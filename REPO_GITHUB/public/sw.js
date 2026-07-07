@@ -1,5 +1,5 @@
 // Palabra que Transforma — Service Worker v9
-const CACHE_NAME = 'pqt-v18-planbib';
+const CACHE_NAME = 'pqt-v21-agentes';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
